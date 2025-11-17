@@ -1,0 +1,31 @@
+app-housing-location {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.inputFilter {
+    border: solid 1px rgb(96, 93, 200);
+    padding: 10px;
+    padding-right: 150px;
+    border-radius: 10px;
+    margin-right: 2px;
+    margin-left: 10px;
+
+}
+
+.primary {
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    background-color: rgb(96, 93, 200);
+}
+
+.results {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 5px;
+    padding: 5px 0px;
+
+}
