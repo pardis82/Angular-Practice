@@ -5,7 +5,6 @@ import { HousingLocationInfo } from './housing-location';
   providedIn: 'root',
 })
 export class Housing {
-  readonly baseUrl = 'assets';
   url = 'http://localhost:3000/locations';
 
   async getAllHousingLocations(): Promise<HousingLocationInfo[]> {
@@ -14,8 +13,8 @@ export class Housing {
   }
 
   async getHousingLocationByID(id: Number): Promise<HousingLocationInfo | undefined> {
-   const data = await fetch (`${this.url}/${id}`)
-   return await data.json() ?? {}
+    const data = await fetch(`${this.url}/${id}`);
+    return (await data.json()) ?? {};
   }
 
   submitApplication(firstName: string, lastName: string, email: string) {
