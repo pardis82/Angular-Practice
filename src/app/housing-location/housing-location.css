@@ -8,7 +8,7 @@
     margin-top: 20px;
     width: 300px;
     /* fixed card width */
-    background-color: rgb(96, 93, 200);
+    background-color: rgb(150, 148, 214);
     border-radius: 8px;
 }
 
@@ -28,10 +28,10 @@
 
 .listing-location {
     margin-top: 3px;
-    color: #bebdbd;
+    color: #e7e0e0;
 }
 
 .details {
     margin-bottom: 5px;
-    color: rgb(207, 207, 207);
+    color: rgb(48, 66, 46);
 }
