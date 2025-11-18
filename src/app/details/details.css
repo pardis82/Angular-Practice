@@ -1,0 +1,63 @@
+.gridcontainer {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
+    margin-left: 30px;
+
+
+}
+
+.listing-photo {
+    width: 500px;
+    height: 400px;
+    display: flex;
+    justify-content: flex-end;
+    border-radius: 5px;
+
+}
+
+.listing-heading {
+    font-size: 2rem;
+    color: rgb(26, 26, 26);
+    margin-left: 5px;
+    margin-top: 3px;
+}
+
+.listing-location {
+    margin-top: 3px;
+    font-size: 1.3rem;
+    color: rgb(26, 26, 26);
+    margin-left: 5px;
+}
+
+.listing-headingAbout {
+    font-size: 1.7rem;
+    color: rgb(96, 93, 200);
+    margin-left: 5px;
+    margin-bottom: 0px;
+}
+
+.descriptionlist {
+    font-size: 1.3rem;
+    list-style: none;
+    padding: 0;
+    margin-left: 5px;
+    margin-top: 5px;
+
+}
+
+.submitbtn {
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    background-color: rgb(96, 93, 200);
+    margin-top: 5px;
+}
+
+.form input {
+    display: block;
+}
+
+.form label {
+    display: inline;
+}
