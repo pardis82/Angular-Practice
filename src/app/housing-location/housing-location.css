@@ -22,13 +22,14 @@
 }
 
 .listing-heading {
-    font-size: 1.2rem;
+    font-size: 1.35rem;
     color: white;
 }
 
 .listing-location {
     margin-top: 3px;
     color: #e7e0e0;
+    font-size: large;
 }
 
 .details {
