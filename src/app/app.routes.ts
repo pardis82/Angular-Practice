@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { Details } from './details/details';
 
-export const routesConfig: Routes = [
+const routes: Routes = [
   {
     path: '',
     component: Home,
@@ -14,3 +14,4 @@ export const routesConfig: Routes = [
     title: 'Home details',
   },
 ];
+export default routes;

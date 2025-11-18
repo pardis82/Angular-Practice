@@ -1,7 +1,6 @@
 app-housing-location {
-    display: block;
-    margin: 0;
-    padding: 0;
+    width: 0px;
+
 }
 
 .inputFilter {
@@ -10,7 +9,7 @@ app-housing-location {
     padding-right: 150px;
     border-radius: 10px;
     margin-right: 2px;
-    margin-left: 10px;
+    margin-left: 70px;
 
 }
 
@@ -24,8 +23,9 @@ app-housing-location {
 
 .results {
     display: grid;
-    grid-template-columns: repeat(4, auto);
-    gap: 5px;
+    grid-template-columns: repeat(5, 350px);
+    gap: 10px;
+    column-gap: 2px;
     padding: 5px 0px;
 
 }

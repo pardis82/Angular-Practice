@@ -1,16 +1,11 @@
-app-housing-location {
-    display: block;
-    margin: 0;
-    padding: 0;
-}
-
 .listing {
     display: flex;
     flex-direction: column;
     /* vertical layout */
     align-items: center;
-    padding: 5px;
-    margin-left: 10px;
+    padding: 10px;
+    margin-left: 75px;
+    margin-top: 20px;
     width: 300px;
     /* fixed card width */
     background-color: rgb(96, 93, 200);
@@ -34,4 +29,9 @@ app-housing-location {
 .listing-location {
     margin-top: 3px;
     color: #bebdbd;
+}
+
+.details {
+    margin-bottom: 5px;
+    color: rgb(207, 207, 207);
 }
