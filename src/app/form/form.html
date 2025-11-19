@@ -3,6 +3,7 @@
 
 
 
+
 <div dir="rtl" class="p-4 border rounded-lg bg-gray-100">
     <p class="text-sm mb-3 text-gray-700">Grid test 2 columns</p>
 
@@ -24,6 +25,9 @@
 
         <app-text-field width="w-64" label="کد ملی" placeholder="کد ملی خود را وارد کنید"
             errorMessage="کد ملی باید 10 رقم باشد" [(value)]="nationalCode"></app-text-field>
+        <app-select [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="کشورها"
+            [value]="selectedCountries" (valueChange)="selectedCountries = $event">
+        </app-select>
     </div>
 </div>
 
