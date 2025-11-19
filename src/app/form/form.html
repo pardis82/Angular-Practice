@@ -1,1 +1,16 @@
-<p>form works!</p>
+<h2 class="text-xl font-bold mb-4">Angular Form Example</h2>
+
+<div className=" grid grid-cols-2 gap-10">
+    <app-text-field label="First Name" placeholder="Enter your first name" [(value)]="firstName"
+        (focused)="onFieldFocus()" (blurred)="onFieldBlur()" />
+
+    <app-text-field label="Description" placeholder="Enter a description" [multiline]="true" [minrows]="3"
+        [(value)]="description" />
+</div>
+
+
+<!-- Display values -->
+<div class="mt-6 p-4 bg-gray-100 rounded">
+    <p>First Name: {{ firstName }}</p>
+    <p>Description: {{ description }}</p>
+</div>

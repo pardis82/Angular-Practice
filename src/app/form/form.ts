@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TextFieldComponent } from '../text-field/text-field';
 
 @Component({
   selector: 'app-form',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, TextFieldComponent],
   templateUrl: './form.html',
-  styleUrl: './form.css',
 })
-export class Form {
+export class FormComponent {
+  firstName = '';
+  description = '';
 
+  onFieldFocus(): void {
+    console.log('Field focused');
+  }
+
+  onFieldBlur(): void {
+    console.log('Field blurred');
+  }
 }

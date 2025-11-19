@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { Details } from './details/details';
-import { Form } from './form/form';
+import { FormComponent } from './form/form';
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
 
   {
     path: 'form',
-    component: Form,
+    component: FormComponent,
     title: 'Form practice',
   },
 ];

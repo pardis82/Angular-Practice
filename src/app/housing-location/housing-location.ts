@@ -17,7 +17,9 @@ import { RouterModule } from '@angular/router';
         alt="Photo of {{ housingLocation().name }}"
       />
 
-      <h2 class="listing-heading text-lg text-white font-serif">{{ housingLocation().name }}</h2>
+      <h2 class="listing-heading text-lg text-white font-serif mt-2">
+        {{ housingLocation().name }}
+      </h2>
       <p class="listing-location mt-1 text-gray-100 text-sm font-serif">
         {{ housingLocation().city }} , {{ housingLocation().state }}
       </p>

@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HousingLocation } from '../housing-location/housing-location';
 import { HousingLocationInfo } from '../housing-location';
 import { Housing } from '../housing';
-import { RouterLink, RouterOutlet, RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, HousingLocation, RouterLink, RouterOutlet, RouterModule],
+  imports: [CommonModule, HousingLocation, RouterLink],
   template: `<section>
       <form>
         <input

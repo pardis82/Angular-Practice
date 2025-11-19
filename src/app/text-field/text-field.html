@@ -1,0 +1,61 @@
+<div [class]="containerClassName || 'w-full'" style="display: inline-block; --input-bg: oklch(92.3% 0.003 48.717)">
+    <div class="relative rounded-lg px-3 py-3 bg-[color:var(--input-bg)]">
+        <!-- FIELDSET (REAL MATERIAL NOTCH) -->
+        <fieldset class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
+        'border-red-400': !!errorMessage,
+        'border-purple-500': !errorMessage && isFocused,
+        'border-gray-300': !errorMessage && !isFocused
+      }" aria-hidden="true">
+            <!-- LEGEND (creates the notch) -->
+            <legend *ngIf="label && float" class="h-0 overflow-hidden transition-all duration-150 pl-2">
+                <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap" style="max-width: calc(100% - 8px)">
+                    {{ label }}
+                </span>
+            </legend>
+        </fieldset>
+
+        <!-- INPUT / TEXTAREA -->
+        <ng-container *ngIf="multiline; else singleLineInput">
+            <textarea #textareaRef [id]="id" [name]="name || id" [value]="actualValue"
+                (input)="onInputChange($event); adjustTextareaHeight(textareaRef)" (focus)="onFocus()" (blur)="onBlur()"
+                [rows]="minrows || 3"
+                class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-none"
+                [ngClass]="[
+    className || '',
+    errorMessage ? 'text-red-600' : ''
+  ]" [placeholder]="float ? '' : truncatedPlaceholder"></textarea>
+
+        </ng-container>
+
+        <ng-template #singleLineInput>
+            <input [id]="id" [name]="name || id" [value]="actualValue" (input)="onInputChange($event)"
+                (focus)="onFocus()" (blur)="onBlur()" type="text"
+                class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right" [ngClass]="[
+    className || '',
+    errorMessage ? 'text-red-600' : ''
+  ]" [placeholder]="float ? '' : truncatedPlaceholder" />
+
+        </ng-template>
+
+        <!-- FLOATING LABEL -->
+        <label *ngIf="label" [for]="id"
+            class="absolute transition-all duration-150 px-1 font-sans pointer-events-none right-2" [ngClass]="{
+        'text-xs': float,
+        'top-1/2 -translate-y-1/2 text-[11.5px] text-gray-600': !float,
+        '-top-[0.7rem]': float,
+        'text-purple-600': float && !errorMessage,
+        'text-red-500': float && !!errorMessage
+      }" style="background: transparent">
+            {{ label }}
+        </label>
+    </div>
+
+    <!-- ERROR / HELP TEXT -->
+    <p *ngIf="errorMessage" class="text-red-500 font-sans text-[12.5px] mt-1">
+        {{ errorMessage }}
+    </p>
+
+    <p *ngIf="!errorMessage && helperText" class="text-gray-500 font-sans text-[12.5px] mt-1">
+        {{ helperText }}
+    </p>
+</div>
