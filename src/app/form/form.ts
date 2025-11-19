@@ -23,6 +23,8 @@ export class FormComponent {
     { value: 'ir', label: 'Iran' },
     { value: 'tr', label: 'Turkey' },
     { value: 'us', label: 'United States' },
+     { value: 'br', label: 'The United Kingdom' },
+     { value: 'fr', label: 'France' },
   ];
   onValueChange(v: SelectValue) {
     console.log('Selected countries:', v);

@@ -37,6 +37,7 @@ export class SelectField {
   @Input() searchable = false;
   @Input() maxDisplayNum = 3;
   @Input() multiple = false;
+  @Input() width = '';
 
   /* ---------------- Value as a signal ---------------- */
   private _value = signal<SelectValue>(null);

@@ -1,18 +1,25 @@
-<div [class]="containerClassName || 'w-full'" style="--input-bg: #ffe2e2">
+<div [class]="width||containerClassName || 'w-full'" dir="rtl" style="--input-bg: #ffe2e2">
     <div class="relative rounded-lg bg-[color:var(--input-bg)]">
-        <div class="relative rounded-lg px-3 pt-1 ">
-            <!-- Border / Fieldset (MUI style) -->
-            <fieldset aria-hidden="true"
-                class="absolute inset-0 pointer-events-none rounded-lg transition-colors border"
+        <div class="relative rounded-lg px-3 pt-1">
+            <!-- FIELDSET (REAL MATERIAL NOTCH) -->
+            <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors"
                 [class.border-red-400]="errorMessage" [class.border-purple-600]="focused() || open()"
-                [class.border-gray-300]="!errorMessage && !focused() && !open()">
+                [class.border-gray-300]="!errorMessage && !focused() && !open()" aria-hidden="true">
 
+                <!-- LEGEND (creates the notch) -->
+                <legend class="h-0 overflow-hidden transition-all duration-150 pr-2">
+                    <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap"
+                        style="max-width: calc(100% - 8px)">
+                        {{ label }}
+                    </span>
+                </legend>
             </fieldset>
 
             <!-- Permanent label -->
-            <label *ngIf="label" class="absolute px-1 right-2 -top-[0.65rem] text-xs font-sans transition-colors"
+            <label *ngIf="label"
+                class="absolute px-1 right-2 -top-[0.7rem] text-xs font-sans transition-colors pointer-events-none z-10"
                 [class.text-red-500]="errorMessage" [class.text-purple-600]="focused() || open()"
-                [class.text-gray-600]="!errorMessage && !focused() && !open()">
+                [class.text-gray-600]="!errorMessage && !focused() && !open()" style="background: transparent">
                 {{ label }}
             </label>
 
@@ -33,10 +40,10 @@
 
             <!-- Dropdown -->
             <div *ngIf="open()"
-                class="absolute z-10 mt-1 w-full right-0 max-h-60 overflow-auto rounded-md py-1 bg-[color:var(--input-bg)] shadow-lg border border-purple-600"
+                class="absolute z-10 mt-1 w-full right-0  overflow-auto rounded-md py-1 bg-[color:var(--input-bg)] shadow-lg border border-purple-600"
                 role="listbox" aria-label="Select options">
                 <!-- Search -->
-                <div *ngIf="searchable" class="px-1 pb-1 sticky top-0 font-sans bg-[color:var(--input-bg)]">
+                <div *ngIf="searchable" class="px-1 pb-1 top-0 font-sans bg-[color:var(--input-bg)]">
                     <div class="relative">
                         <!-- Search Icon -->
                         <svg class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none h-4 w-4"
@@ -50,7 +57,6 @@
                             class="w-full border border-gray-300 rounded-md px-5 py-2 text-sm focus:ring-1/2 focus:border-purple-500 focus:outline-none focus:ring-purple-500 bg-[var(--input-bg)]" />
                     </div>
                 </div>
-
 
                 <!-- Empty -->
                 <div *ngIf="filteredOptions().length === 0"
