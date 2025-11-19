@@ -17,6 +17,7 @@ export class TextFieldComponent {
 
   @Input() minrows?: number;
   @Input() maxrows?: number;
+  @Input() width?: string; // e.g., 'w-full', 'w-1/2', 'w-64', 'flex-1'
   @Input() multiline = false;
 
   @Input() defaultValue?: string;
@@ -48,8 +49,8 @@ export class TextFieldComponent {
   // Match React placeholder truncation
   get truncatedPlaceholder(): string {
     if (!this.placeholder) return '';
-    return this.placeholder.length > 20
-      ? this.placeholder.substring(0, 20) + '...'
+    return this.placeholder.length > 30
+      ? this.placeholder.substring(0, 30) + '...'
       : this.placeholder;
   }
 

@@ -1,7 +1,7 @@
-<div [class]="containerClassName || 'w-full'" style="display: inline-block; --input-bg: oklch(92.3% 0.003 48.717)">
+<div [class]="width||containerClassName || 'w-full'" dir="rtl" style=" --input-bg:#ffe2e2 ">
     <div class="relative rounded-lg px-3 py-3 bg-[color:var(--input-bg)]">
         <!-- FIELDSET (REAL MATERIAL NOTCH) -->
-        <fieldset class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
+        <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
         'border-red-400': !!errorMessage,
         'border-purple-500': !errorMessage && isFocused,
         'border-gray-300': !errorMessage && !isFocused
@@ -23,7 +23,7 @@
                 [ngClass]="[
     className || '',
     errorMessage ? 'text-red-600' : ''
-  ]" [placeholder]="float ? '' : truncatedPlaceholder"></textarea>
+  ]" [placeholder]="float ?  truncatedPlaceholder : ''"></textarea>
 
         </ng-container>
 
@@ -33,7 +33,7 @@
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right" [ngClass]="[
     className || '',
     errorMessage ? 'text-red-600' : ''
-  ]" [placeholder]="float ? '' : truncatedPlaceholder" />
+  ]" [placeholder]="float ? truncatedPlaceholder:''" />
 
         </ng-template>
 

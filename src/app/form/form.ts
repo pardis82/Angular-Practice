@@ -11,6 +11,10 @@ import { TextFieldComponent } from '../text-field/text-field';
 export class FormComponent {
   firstName = '';
   description = '';
+  lastName = '';
+  password = '';
+  email = '';
+  nationalCode = '';
 
   onFieldFocus(): void {
     console.log('Field focused');
