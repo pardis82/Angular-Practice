@@ -41,7 +41,7 @@
             [(value)]="lastName2"></app-text-field>
 
         <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
-            errorMessage="اجباری است" helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password2"></app-text-field>
+            helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password2"></app-text-field>
         <app-text-field width="w-64" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
             [minrows]="2" [maxrows]="3" [(value)]="description2"></app-text-field>
         <app-select width="w-64" [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true"
