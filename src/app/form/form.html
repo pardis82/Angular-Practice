@@ -1,11 +1,11 @@
-<h2 class="text-xl font-bold mb-4">Angular Form Example</h2>
+<h2 class="text-xl font-bold ml-5 mb-4">Angular Form Example</h2>
 
 
 
 <div dir="rtl" class="p-4 border rounded-lg mt-10 ">
 
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
             helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName"></app-text-field>
 
@@ -18,7 +18,7 @@
         <app-text-field width="w-64" containerClassName="col-span-full" label="ایمیل"
             placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
 
-        <app-text-field width="w-64" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
+        <app-text-field width="w-72" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
             [minrows]="2" [maxrows]="3" [(value)]="description"></app-text-field>
 
         <app-text-field width="w-64" label="کد ملی" placeholder="کد ملی خود را وارد کنید"
@@ -28,7 +28,22 @@
             label="کشورها" [value]="selectedCountries" (valueChange)="selectedCountries = $event">
         </app-select>
     </div>
+
+
 </div>
+<div dir="rtl" class=" p-4 border rounded-lg mt-20 bg-gray-100 ">
+    <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-4 ">
+        <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
+            helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName2"></app-text-field>
+
+        <app-text-field width="w-64" label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
+            [(value)]="lastName2"></app-text-field>
+
+        <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            errorMessage="اجباری است" helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password2"></app-text-field>
+    </div>
+</div>
+
 
 
 

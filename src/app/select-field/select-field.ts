@@ -32,8 +32,8 @@ export class SelectField {
   @Input() className = '';
   @Input() containerClassName = '';
   @Input() showSelectAll = false;
-  @Input() selectAllText = 'Select All';
-  @Input() deselectAllText = 'Deselect All';
+  @Input() selectAllText = 'انتخاب همه';
+  @Input() deselectAllText = 'لغو همه';
   @Input() searchable = false;
   @Input() maxDisplayNum = 3;
   @Input() multiple = false;
@@ -70,7 +70,7 @@ export class SelectField {
   buttonText = computed(() => {
     if (this.multiple) {
       const selected = (this._value() as Option[]) || [];
-      if (selected.length === 0) return 'انتخاب کنید';
+      if (selected.length === 0) return ' کشور مورد نظر خود را انتخاب کنید';
       if (selected.length === 1) return selected[0].label;
       if (selected.length <= this.maxDisplayNum) {
         return selected.map((s) => s.label).join('، ');
@@ -78,7 +78,7 @@ export class SelectField {
       return `${selected.length} آیتم انتخاب شد`;
     }
     const selected = this._value() as Option | null;
-    return selected?.label ?? 'انتخاب کنید';
+    return selected?.label ?? ' کشور مورد نظر خود را انتخاب کنید';
   });
 
   areAllSelected(): boolean {

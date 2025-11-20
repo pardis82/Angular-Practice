@@ -13,18 +13,21 @@ import { SelectValue } from '../select-field/select-field';
 })
 export class FormComponent {
   firstName = '';
+  firstName2 = '';
   description = '';
   lastName = '';
   password = '';
+  lastName2 = '';
+  password2 = '';
   email = '';
   nationalCode = '';
   selectedCountries: SelectValue = [];
   countries: Option[] = [
-    { value: 'ir', label: 'Iran' },
-    { value: 'tr', label: 'Turkey' },
-    { value: 'us', label: 'United States' },
-     { value: 'br', label: 'The United Kingdom' },
-     { value: 'fr', label: 'France' },
+    { value: 'ir', label: 'ایران' },
+    { value: 'tr', label: 'ترکیه' },
+    { value: 'us', label: 'آمریکا' },
+    { value: 'br', label: 'انگلیس' },
+    { value: 'fr', label: 'فرانسه' },
   ];
   onValueChange(v: SelectValue) {
     console.log('Selected countries:', v);
