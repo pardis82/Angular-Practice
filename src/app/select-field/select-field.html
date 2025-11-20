@@ -16,7 +16,7 @@
             </fieldset>
 
             <!-- Permanent label -->
-            <label *ngIf="label"
+            <label NgIf.ngIf: string="label"
                 class="absolute px-1 right-2 -top-[0.7rem] text-xs font-sans transition-colors pointer-events-none z-10"
                 [class.text-red-500]="errorMessage" [class.text-purple-600]="focused() || open()"
                 [class.text-gray-600]="!errorMessage && !focused() && !open()" style="background: transparent">

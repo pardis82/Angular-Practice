@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class TextFieldComponent {
   @Input() label?: string;
+  @Input() type?: string;
   @Input() helperText?: string;
   @Input() errorMessage?: string;
   @Input() containerClassName?: string;
@@ -33,6 +34,27 @@ export class TextFieldComponent {
   @Output() blurred = new EventEmitter<void>();
 
   isFocused = false;
+  public isPasswordVisible = false;
+  public actualType: string = '';
+
+  constructor() {
+    this.actualType = this.type || 'text';
+  }
+
+  togglePasswordVisibility(): void {
+    if (this.type === 'password') {
+      this.isPasswordVisible = !this.isPasswordVisible;
+      this.actualType = this.isPasswordVisible ? 'text' : 'password';
+    }
+  }
+
+  ngOnChanges(): void {
+    this.actualType = this.type || 'text';
+    // Reset visibility when type changes from password to something else
+    if (this.type !== 'password') {
+      this.isPasswordVisible = false;
+    }
+  }
 
   get actualValue(): string {
     return this.value !== undefined && this.value !== null ? this.value : this.defaultValue || '';

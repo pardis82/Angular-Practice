@@ -28,13 +28,43 @@
         </ng-container>
 
         <ng-template #singleLineInput>
-            <input [id]="id" [name]="name || id" [value]="actualValue" (input)="onInputChange($event)"
-                (focus)="onFocus()" (blur)="onBlur()" type="text"
-                class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right" [ngClass]="[
-    className || '',
-    errorMessage ? 'text-red-600' : ''
-  ]" [placeholder]="float ? truncatedPlaceholder:''" />
+            <div class="relative">
+                <input [type]="actualType" [id]="id" [name]="name || id" [value]="actualValue"
+                    (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
+                    class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1"
+                    [ngClass]="[
+        className || '',
+        errorMessage ? 'text-red-600' : ''
+      ]" [placeholder]="float ? truncatedPlaceholder:''" />
 
+                <!-- Password visibility toggle -->
+                <button *ngIf="type === 'password'" type="button" (click)="togglePasswordVisibility()"
+                    class="absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none transition-colors duration-200 p-1"
+                    [attr.aria-label]="isPasswordVisible ? 'Hide password' : 'Show password'">
+                    <ng-container *ngIf="isPasswordVisible; else eyeIcon">
+                        <!-- Eye Off SVG -->
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242">
+                            </path>
+                            <path
+                                d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20">
+                            </path>
+                        </svg>
+                    </ng-container>
+                    <ng-template #eyeIcon>
+                        <!-- Eye SVG -->
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M21.257 10.962c.474.62.474 1.457 0 2.076C19.764 14.987 16.182 19 12 19c-4.182 0-7.764-4.013-9.257-5.962a1.692 1.692 0 0 1 0-2.076C4.236 9.013 7.818 5 12 5c4.182 0 7.764 4.013 9.257 5.962Z">
+                            </path>
+                            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+                        </svg>
+                    </ng-template>
+                </button>
+            </div>
         </ng-template>
 
         <!-- FLOATING LABEL -->

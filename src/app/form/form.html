@@ -2,36 +2,6 @@
 
 
 
-
-
-<div dir="rtl" class="p-4 border rounded-lg bg-gray-100">
-    <p class="text-sm mb-3 text-gray-700">Grid test 2 columns</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
-            helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName"></app-text-field>
-
-        <app-text-field width="w-64" label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
-            [(value)]="lastName"></app-text-field>
-
-        <app-text-field width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید" errorMessage="اجباری است"
-            helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password"></app-text-field>
-
-        <app-text-field width="w-80" containerClassName="col-span-full" label="ایمیل"
-            placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
-
-        <app-text-field width="w-96" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
-            [minrows]="2" [maxrows]="3" [(value)]="description"></app-text-field>
-
-        <app-text-field width="w-64" label="کد ملی" placeholder="کد ملی خود را وارد کنید"
-            errorMessage="کد ملی باید 10 رقم باشد" [(value)]="nationalCode"></app-text-field>
-        <app-select [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="کشورها"
-            [value]="selectedCountries" (valueChange)="selectedCountries = $event">
-        </app-select>
-    </div>
-</div>
-
-
 <div dir="rtl" class="p-4 border rounded-lg mt-10 ">
 
 
@@ -42,8 +12,8 @@
         <app-text-field width="w-64" label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
             [(value)]="lastName"></app-text-field>
 
-        <app-text-field width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید" errorMessage="اجباری است"
-            helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password"></app-text-field>
+        <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            errorMessage="اجباری است" helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password"></app-text-field>
 
         <app-text-field width="w-64" containerClassName="col-span-full" label="ایمیل"
             placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
