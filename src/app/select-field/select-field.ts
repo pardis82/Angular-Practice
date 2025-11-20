@@ -28,6 +28,7 @@ export class SelectField {
   /* ---------------- Inputs ---------------- */
   @Input() options: Option[] = [];
   @Input() label = '';
+  @Input() placeholder = 'انتخاب کنید';
   @Input() errorMessage = '';
   @Input() className = '';
   @Input() containerClassName = '';
@@ -70,7 +71,7 @@ export class SelectField {
   buttonText = computed(() => {
     if (this.multiple) {
       const selected = (this._value() as Option[]) || [];
-      if (selected.length === 0) return ' کشور مورد نظر خود را انتخاب کنید';
+      if (selected.length === 0) return this.placeholder;
       if (selected.length === 1) return selected[0].label;
       if (selected.length <= this.maxDisplayNum) {
         return selected.map((s) => s.label).join('، ');
@@ -78,7 +79,7 @@ export class SelectField {
       return `${selected.length} آیتم انتخاب شد`;
     }
     const selected = this._value() as Option | null;
-    return selected?.label ?? ' کشور مورد نظر خود را انتخاب کنید';
+    return selected?.label ?? this.placeholder;
   });
 
   areAllSelected(): boolean {

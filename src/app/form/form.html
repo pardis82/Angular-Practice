@@ -5,7 +5,7 @@
 <div dir="rtl" class="p-4 border rounded-lg mt-10 ">
 
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid lg:grid-cols-3 md:grid-cols-4 gap-4">
         <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
             helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName"></app-text-field>
 
@@ -25,14 +25,15 @@
             errorMessage="کد ملی باید 10 رقم باشد" [(value)]="nationalCode"></app-text-field>
 
         <app-select width="w-64" [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true"
-            label="کشورها" [value]="selectedCountries" (valueChange)="selectedCountries = $event">
+            label="کشورها" placeholder="کشور مورد نظر خود را انتخاب کنید" [value]="selectedCountries"
+            (valueChange)="selectedCountries = $event">
         </app-select>
     </div>
 
 
 </div>
 <div dir="rtl" class=" p-4 border rounded-lg mt-20 bg-gray-100 ">
-    <div class="grid lg:grid-cols-2 md:grid-cols-4 gap-4 ">
+    <div class="grid lg:grid-cols-3 md:grid-cols-6 gap-4 ">
         <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
             helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName2"></app-text-field>
 
@@ -41,6 +42,21 @@
 
         <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
             errorMessage="اجباری است" helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password2"></app-text-field>
+        <app-text-field width="w-64" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
+            [minrows]="2" [maxrows]="3" [(value)]="description2"></app-text-field>
+        <app-select width="w-64" [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true"
+            label="بیمه" placeholder="بیمه مورد نظر خود را انتخاب کتید" [value]="selectedInsurance"
+            (valueChange)="selectedInsurance = $event">
+        </app-select>
+
+        <app-select width="w-64" [options]="Level" [searchable]="true" [showSelectAll]="true" label="سطح"
+            placeholder="سطح مورد نظر خود را انتخاب کنید" [value]="selectedLevel"
+            (valueChange)="selectedLevel = $event">
+        </app-select>
+        <app-select width="w-64" [options]="Level" [showSelectAll]="true" label="سطح"
+            placeholder="سطح مورد نظر خود را انتخاب کنید" [value]="selectedLevel"
+            (valueChange)="selectedLevel = $event">
+        </app-select>
     </div>
 </div>
 

@@ -15,6 +15,7 @@ export class FormComponent {
   firstName = '';
   firstName2 = '';
   description = '';
+  description2 = '';
   lastName = '';
   password = '';
   lastName2 = '';
@@ -29,6 +30,20 @@ export class FormComponent {
     { value: 'br', label: 'انگلیس' },
     { value: 'fr', label: 'فرانسه' },
   ];
+
+  selectedInsurance: SelectValue = [];
+  Insurance: Option[] = [
+    { value: 'public', label: 'تامین اجتماعی' },
+    { value: 'complete', label: 'تکمیلی' },
+  ];
+
+  selectedLevel: SelectValue = [];
+  Level: Option[] = [
+    { value: 'beginner', label: 'A1' },
+    { value: 'intermediate', label: 'B1' },
+    { value: 'advanced', label: 'C1' },
+  ];
+
   onValueChange(v: SelectValue) {
     console.log('Selected countries:', v);
     console.log('Type of v:', typeof v);
