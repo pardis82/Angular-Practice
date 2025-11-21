@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, input, output , model} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,55 +9,54 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
 })
 export class TextFieldComponent {
-  @Input() label?: string;
-  @Input() type?: string;
-  @Input() helperText?: string;
-  @Input() errorMessage?: string;
-  @Input() containerClassName?: string;
-  @Input() className?: string;
+  // ----- SIGNAL INPUTS -----
+  label = input<string>();
+  type = input<string>('text');
+  helperText = input<string>();
+  errorMessage = input<string>();
+  containerClassName = input<string>();
+  className = input<string>();
 
-  @Input() minrows?: number;
-  @Input() maxrows?: number;
-  @Input() width?: string; // e.g., 'w-full', 'w-1/2', 'w-64', 'flex-1'
-  @Input() multiline = false;
+  minrows = input<number>(3);
+  maxrows = input<number>(10);
+  width = input<string>();
+  multiline = input<boolean>(false);
 
-  @Input() defaultValue?: string;
-  @Input() placeholder?: string;
+  defaultValue = input<string>();
+  placeholder = input<string>();
 
-  @Input() id?: string;
-  @Input() name?: string;
+  id = input<string>();
+  name = input<string>();
 
-  @Input() value = '';
-  @Output() valueChange = new EventEmitter<string>();
+  // value with two-way binding
+  value = model<string>('');
+  valueChange = output<string>();
 
-  @Output() focused = new EventEmitter<void>();
-  @Output() blurred = new EventEmitter<void>();
+  // ----- SIGNAL OUTPUTS -----
+  focused = output<void>();
+  blurred = output<void>();
 
+  // ----- INTERNAL STATE -----
   isFocused = false;
-  public isPasswordVisible = false;
-  public actualType: string = '';
+  isPasswordVisible = false;
+  actualType = this.type();
 
   constructor() {
-    this.actualType = this.type || 'text';
+    this.actualType = this.type() || 'text';
   }
 
-  togglePasswordVisibility(): void {
-    if (this.type === 'password') {
-      this.isPasswordVisible = !this.isPasswordVisible;
-      this.actualType = this.isPasswordVisible ? 'text' : 'password';
-    }
-  }
+  ngOnChanges() {
+    this.actualType = this.type() || 'text';
 
-  ngOnChanges(): void {
-    this.actualType = this.type || 'text';
-    // Reset visibility when type changes from password to something else
-    if (this.type !== 'password') {
+    if (this.type() !== 'password') {
       this.isPasswordVisible = false;
     }
   }
 
+  // ----- GETTERS -----
   get actualValue(): string {
-    return this.value !== undefined && this.value !== null ? this.value : this.defaultValue || '';
+    const v = this.value();
+    return v !== undefined && v !== null ? v : this.defaultValue() || '';
   }
 
   get hasValue(): boolean {
@@ -68,17 +67,15 @@ export class TextFieldComponent {
     return this.hasValue || this.isFocused;
   }
 
-  // Match React placeholder truncation
   get truncatedPlaceholder(): string {
-    if (!this.placeholder) return '';
-    return this.placeholder.length > 30
-      ? this.placeholder.substring(0, 30) + '...'
-      : this.placeholder;
+    const p = this.placeholder() || '';
+    return p.length > 30 ? p.substring(0, 30) + '...' : p;
   }
 
+  // ----- EVENTS -----
   onInputChange(e: Event) {
     const value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
-    this.value = value;
+    this.value.set(value);
     this.valueChange.emit(value);
   }
 
@@ -92,14 +89,21 @@ export class TextFieldComponent {
     this.blurred.emit();
   }
 
+  togglePasswordVisibility(): void {
+    if (this.type() === 'password') {
+      this.isPasswordVisible = !this.isPasswordVisible;
+      this.actualType = this.isPasswordVisible ? 'text' : 'password';
+    }
+  }
+
   adjustTextareaHeight(textarea: HTMLTextAreaElement) {
-    if (!this.multiline) return;
+    if (!this.multiline()) return;
 
     textarea.style.height = 'auto';
 
     const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
-    const minH = (this.minrows ?? 3) * lineHeight;
-    const maxH = (this.maxrows ?? 10) * lineHeight;
+    const minH = this.minrows() * lineHeight;
+    const maxH = this.maxrows() * lineHeight;
 
     const newHeight = Math.min(Math.max(textarea.scrollHeight, minH), maxH);
 
