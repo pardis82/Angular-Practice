@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './text-field.html',
   imports: [CommonModule, FormsModule],
 })
-export class TextFieldComponent {
+export class TextField {
   // ----- SIGNAL INPUTS -----
   label = input<string>();
   type = input<string>('text');
