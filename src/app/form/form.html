@@ -1,54 +1,55 @@
 <h2 class="text-xl font-bold ml-5 mb-4">Angular Form Example</h2>
 <div dir="rtl" class="p-4 border rounded-lg mt-10 ">
-    <div class="grid lg:grid-cols-3 md:grid-cols-4 gap-4">
-        <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
-            helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName"></app-text-field>
+    <div class="grid lg:grid-cols-6 md:grid-cols-4 gap-4">
+        <app-text-field label="نام" placeholder="نام خود را وارد کنید" helperText="نام باید حداقل 3 حرف باشد"
+            [(value)]="firstName"></app-text-field>
 
-        <app-text-field width="w-64" label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
+        <app-text-field label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
             [(value)]="lastName"></app-text-field>
 
-        <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
-            errorMessage="اجباری است" helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password"></app-text-field>
+        <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            errorMessage="اجباری است"
+            helperText="رمز باید حداقل 8 کاراکتر، شامل حرف بزرگ و گوچک، عدد و حداقل یک کاراکتر خاص باشد"
+            [(value)]="password"></app-text-field>
 
-        <app-text-field width="w-64" containerClassName="col-span-full" label="ایمیل"
-            placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
+        <app-text-field label="ایمیل" placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
 
-        <app-text-field width="w-72" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
-            [minrows]="2" [maxrows]="3" [(value)]="description"></app-text-field>
+        <app-text-field label="کد ملی" placeholder="کد ملی خود را وارد کنید" errorMessage="کد ملی باید 10 رقم باشد"
+            [(value)]="nationalCode"></app-text-field>
 
-        <app-text-field width="w-64" label="کد ملی" placeholder="کد ملی خود را وارد کنید"
-            errorMessage="کد ملی باید 10 رقم باشد" [(value)]="nationalCode"></app-text-field>
 
-        <app-select width="w-64" [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true"
-            label="کشورها" placeholder="کشور مورد نظر خود را انتخاب کنید" [value]="selectedCountries"
+        <app-select [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="کشورها"
+            placeholder="کشور مورد نظر خود را انتخاب کنید" [value]="selectedCountries"
             (valueChange)="selectedCountries = $event">
         </app-select>
+        <app-text-field label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true" [minrows]="2"
+            [maxrows]="3" [(value)]="description"></app-text-field>
     </div>
 </div>
 <div dir="rtl" class=" p-4 border rounded-lg mt-20 bg-gray-100 ">
-    <div class="grid lg:grid-cols-3 md:grid-cols-6 gap-4 ">
-        <app-text-field width="w-64" label="نام" placeholder="نام خود را وارد کنید"
-            helperText="نام باید حداقل 3 حرف باشد" [(value)]="firstName2"></app-text-field>
+    <div class="grid lg:grid-cols-4 md:grid-cols-6 gap-4 ">
+        <app-text-field label="نام" placeholder="نام خود را وارد کنید" helperText="نام باید حداقل 3 حرف باشد"
+            [(value)]="firstName2"></app-text-field>
 
-        <app-text-field width="w-64" label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
+        <app-text-field label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید"
             [(value)]="lastName2"></app-text-field>
 
-        <app-text-field type="password" width="w-64" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
-            helperText="رمز باید حداقل 8 کاراکتر باشد" [(value)]="password2"></app-text-field>
-        <app-text-field width="w-64" label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true"
-            [minrows]="2" [maxrows]="3" [(value)]="description2"></app-text-field>
-        <app-select width="w-64" [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true"
-            label="بیمه" placeholder="بیمه مورد نظر خود را انتخاب کتید" [value]="selectedInsurance"
+        <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            helperText="رمز باید حداقل 8 کاراکتر، شامل حرف بزرگ و گوچک، عدد و حداقل یک کاراکتر خاص باشد"
+            [(value)]="password2"></app-text-field>
+        <app-text-field label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true" [minrows]="2"
+            [maxrows]="3" [(value)]="description2"></app-text-field>
+        <app-select [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="بیمه"
+            placeholder="بیمه مورد نظر خود را انتخاب کتید" [value]="selectedInsurance"
             (valueChange)="selectedInsurance = $event">
         </app-select>
 
-        <app-select width="w-64" [options]="Level" [searchable]="true" [showSelectAll]="true" label="سطح"
+        <app-select [options]="Level" [searchable]="true" [showSelectAll]="true" label="سطح"
             placeholder="سطح مورد نظر خود را انتخاب کنید" [value]="selectedLevel"
             (valueChange)="selectedLevel = $event">
         </app-select>
-        <app-select width="w-64" [options]="Level" [showSelectAll]="true" label="سطح"
-            placeholder="سطح مورد نظر خود را انتخاب کنید" [value]="selectedLevel"
-            (valueChange)="selectedLevel = $event">
+        <app-select [options]="Level" [showSelectAll]="true" label="سطح" placeholder="سطح مورد نظر خود را انتخاب کنید"
+            [value]="selectedLevel" (valueChange)="selectedLevel = $event">
         </app-select>
     </div>
 </div>

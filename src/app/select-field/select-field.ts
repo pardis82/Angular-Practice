@@ -38,8 +38,7 @@ export class SelectField {
   searchable = input<boolean>(false);
   maxDisplayNum = input<number>(3);
   multiple = input<boolean>(false);
-  width = input<string>('');
-
+  colSpan = input<string>('');
   // ----- VALUE SIGNAL (TWO-WAY) -----
   value = model<SelectValue>(null);
   valueChange = output<SelectValue>();

@@ -1,12 +1,13 @@
-<div [class]="width() || containerClassName() || 'w-full'" dir="rtl" style="--input-bg:#ffe2e2">
+<div [class]=" colSpan() ||  'col-span-1'  || containerClassName()  " dir="rtl" style="--input-bg:#ffe2e2">
 
-    <div class="relative rounded-lg px-3 py-3 bg-[color:var(--input-bg)]">
+    <div class="relative w-full rounded-lg px-3 py-3 bg-[color:var(--input-bg)]">
 
         <!-- FIELDSET -->
         <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
                     'border-red-400': !!errorMessage(),
                     'border-purple-500': !errorMessage() && isFocused,
-                    'border-gray-300': !errorMessage() && !isFocused
+                    'border-gray-300': !errorMessage() && !isFocused,
+                    'border-green-400': unmetRequirements.length === 0
                   }" aria-hidden="true">
 
             <legend *ngIf="label() && float" class="h-0 overflow-hidden transition-all duration-150 pl-2">
@@ -20,7 +21,7 @@
 
         @if (multiline()) {
 
-        <textarea #textareaRef [id]="id()" [name]="name() || id()" [value]="actualValue"
+        <textarea #textareaRef [id]="id()" [name]="name() || id()" [value]="value()"
             (input)="onInputChange($event); adjustTextareaHeight(textareaRef)" (focus)="onFocus()" (blur)="onBlur()"
             [rows]="minrows() || 3"
             class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-y" [ngClass]="[
@@ -33,7 +34,7 @@
 
         <div class="relative">
 
-            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="actualValue"
+            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="value()"
                 (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1" [ngClass]="[
                       className() || '',
@@ -42,7 +43,7 @@
 
             <!-- PASSWORD TOGGLE -->
             @if (type() === 'password' && hasValue) {
-            <div class="w-full bg-gray rounded mt-2 h-2">
+            <div class="w-full bg-gray rounded mt-2 h-1">
                 <div class="h-full rounded transition-all duration-200" [style.width.%]="strengthPrecentage"
                     [class]="stengthColor">
 
@@ -100,13 +101,23 @@
     </div>
 
     <!-- ERROR TEXT -->
-    <p *ngIf="errorMessage()" class="text-red-500 font-sans text-[12.5px] mt-1">
+    <p *ngIf="errorMessage()" class="text-red-500 font-sans text-[12.5px] mt-1 mr-1">
         {{ errorMessage() }}
     </p>
 
     <!-- HELP TEXT -->
-    <p *ngIf="!errorMessage() && helperText()" class="text-gray-500 font-sans text-[12.5px] mt-1">
-        {{ helperText() }}
-    </p>
+
+    <div class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1"
+        *ngIf="unmetRequirements.length > 0 && !errorMessage() && helperText()">
+        <p>پسورد باید شامل حداقل :</p>
+        <ul>
+            <li *ngFor="let rule of unmetRequirements">{{ rule }}</li>
+        </ul>
+    </div>
+
+    <div class="text-xs text-green-600 mt-1 mr-1 " *ngIf="unmetRequirements.length === 0">
+        پسورد قوی است.
+    </div>
+
 
 </div>

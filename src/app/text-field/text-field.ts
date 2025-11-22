@@ -19,7 +19,8 @@ export class TextField {
 
   minrows = input<number>(3);
   maxrows = input<number>(10);
-  width = input<string>();
+
+  colSpan = input<string>();
   multiline = input<boolean>(false);
 
   defaultValue = input<string>();
@@ -41,6 +42,14 @@ export class TextField {
   isPasswordVisible = false;
   actualType = this.type();
   passwordStrength = 0;
+
+  passwordRequirements = {
+    lowerCase: false,
+    upperCase: false,
+    hasNumbers: false,
+    hasSpecialCharacters: false,
+    isLengthy: false,
+  };
 
   constructor() {
     this.actualType = this.type() || 'text';
@@ -78,31 +87,58 @@ export class TextField {
   }
 
   get stengthColor(): string {
-    if (this.passwordStrength <= 1) return 'bg-red-400';
-    if (this.passwordStrength <= 3) return 'bg-yellow-400';
+    if (this.passwordStrength <= 1) return 'bg-red-600';
+    if (this.passwordStrength === 2) return 'bg-yellow-400';
+    if (this.passwordStrength === 3) return 'bg-orange-300';
+    if (this.passwordStrength === 4) return 'bg-orange-500';
     return 'bg-green-400';
+  }
+
+  get unmetRequirements(): string[] {
+    const unmet: string[] = [];
+
+    if (!this.passwordRequirements.lowerCase) unmet.push('•  یک حرف کوچک');
+
+    if (!this.passwordRequirements.upperCase) unmet.push('•  یک حرف بزرگ');
+
+    if (!this.passwordRequirements.hasNumbers) unmet.push('•  یک عدد');
+
+    if (!this.passwordRequirements.hasSpecialCharacters)
+      unmet.push('•  یکی از این کاراکتر ها (@ # $ % ! ?)');
+
+    if (!this.passwordRequirements.isLengthy) unmet.push('• 8 کاراکتر ');
+
+    return unmet;
   }
 
   // ----- EVENTS -----
 
   calculatePasswordStrength(value: string) {
-    let passwordScore = 0;
-    if (value.length >= 8) passwordScore++;
-    if (/[A-Z]/.test(value)) passwordScore++;
-    if (/[a-z]/.test(value)) passwordScore++;
-    if (/[0-9]/.test(value)) passwordScore++;
-    if (/[^A-Za-z0-9]/.test(value)) passwordScore++;
+    // Update requirement flags
+    this.passwordRequirements.lowerCase = /[a-z]/.test(value);
+    this.passwordRequirements.upperCase = /[A-Z]/.test(value);
+    this.passwordRequirements.hasNumbers = /[0-9]/.test(value);
+    this.passwordRequirements.hasSpecialCharacters = /[@#$%^&*!?]/.test(value);
+    this.passwordRequirements.isLengthy = value.length >= 8;
 
-    this.passwordStrength = passwordScore;
+    // Count how many are true
+    let score = 0;
+    if (this.passwordRequirements.isLengthy) score++;
+    if (this.passwordRequirements.upperCase) score++;
+    if (this.passwordRequirements.lowerCase) score++;
+    if (this.passwordRequirements.hasNumbers) score++;
+    if (this.passwordRequirements.hasSpecialCharacters) score++;
+
+    this.passwordStrength = score;
   }
 
   onInputChange(e: Event) {
-    const value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
-    this.value.set(value);
-    this.valueChange.emit(value);
+    const val = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
+    this.value.set(val);
+    this.valueChange.emit(val);
 
     if (this.type() === 'password') {
-      this.calculatePasswordStrength(value);
+      this.calculatePasswordStrength(val);
     }
   }
 
