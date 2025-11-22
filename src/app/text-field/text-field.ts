@@ -1,4 +1,4 @@
-import { Component, input, output , model} from '@angular/core';
+import { Component, input, output, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -40,6 +40,7 @@ export class TextField {
   isFocused = false;
   isPasswordVisible = false;
   actualType = this.type();
+  passwordStrength = 0;
 
   constructor() {
     this.actualType = this.type() || 'text';
@@ -72,11 +73,37 @@ export class TextField {
     return p.length > 30 ? p.substring(0, 30) + '...' : p;
   }
 
+  get strengthPrecentage(): number {
+    return (this.passwordStrength / 5) * 100;
+  }
+
+  get stengthColor(): string {
+    if (this.passwordStrength <= 1) return 'bg-red-400';
+    if (this.passwordStrength <= 3) return 'bg-yellow-400';
+    return 'bg-green-400';
+  }
+
   // ----- EVENTS -----
+
+  calculatePasswordStrength(value: string) {
+    let passwordScore = 0;
+    if (value.length >= 8) passwordScore++;
+    if (/[A-Z]/.test(value)) passwordScore++;
+    if (/[a-z]/.test(value)) passwordScore++;
+    if (/[0-9]/.test(value)) passwordScore++;
+    if (/[^A-Za-z0-9]/.test(value)) passwordScore++;
+
+    this.passwordStrength = passwordScore;
+  }
+
   onInputChange(e: Event) {
     const value = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
     this.value.set(value);
     this.valueChange.emit(value);
+
+    if (this.type() === 'password') {
+      this.calculatePasswordStrength(value);
+    }
   }
 
   onFocus() {
