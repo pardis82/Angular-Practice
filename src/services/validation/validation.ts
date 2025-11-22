@@ -6,9 +6,9 @@ import { Injectable } from '@angular/core';
 export class ValidationService {
   constructor() {}
 
-  // ---------------------
+  // ----------------------------------------------------
   // PASSWORD VALIDATION
-  // ---------------------
+  // ----------------------------------------------------
   getPasswordRequirements(password: string) {
     const requirements = {
       lowerCase: /[a-z]/.test(password),
@@ -21,10 +21,11 @@ export class ValidationService {
     const score = Object.values(requirements).filter(Boolean).length;
 
     const unmet: string[] = [];
+
     if (!requirements.lowerCase) unmet.push('•  یک حرف کوچک');
     if (!requirements.upperCase) unmet.push('•  یک حرف بزرگ');
     if (!requirements.hasNumbers) unmet.push('•  یک عدد');
-    if (!requirements.hasSpecialCharacters) unmet.push('•  یکی از این کاراکتر ها (@ # $ % ! ?)');
+    if (!requirements.hasSpecialCharacters) unmet.push('•  یکی از این کاراکترها (@ # $ % ! ?)');
     if (!requirements.isLengthy) unmet.push('•  حداقل 8 کاراکتر');
 
     return { requirements, score, unmet };
@@ -42,44 +43,85 @@ export class ValidationService {
     return (score / 5) * 100;
   }
 
-  // ---------------------
+  // ----------------------------------------------------
   // NATIONAL CODE VALIDATION
-  // ---------------------
+  // ----------------------------------------------------
   validateNationalCode(code: string): boolean {
-    // must be exactly 10 digits and no letters
+    // Must be exactly 10 digits, no letters
     return /^[0-9]{10}$/.test(code);
   }
 
-  // ---------------------
+  // ----------------------------------------------------
   // PHONE NUMBER VALIDATION
-  // ---------------------
+  // ----------------------------------------------------
   validatePhoneNumber(phone: string): boolean {
-    // Remove spaces or non-digit characters
+    // Remove all non-digits
     const digitsOnly = phone.replace(/\D/g, '');
-    // Must be exactly 10 digits, cannot start with 0
+
+    // Must be 10 digits, cannot start with 0
     return /^[1-9][0-9]{9}$/.test(digitsOnly);
   }
 
   formatPhoneNumber(phone: string, prefix: string = '+98'): string {
-    // remove non-digit characters
     const digitsOnly = phone.replace(/\D/g, '');
     return `${prefix}${digitsOnly}`;
   }
 
-  // ---------------------
+  // ----------------------------------------------------
   // EMAIL VALIDATION
-  // ---------------------
+  // ----------------------------------------------------
   validateEmail(email: string): boolean {
-    // Basic email format check
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }
 
-  // async method to check if email exists (requires backend)
+  // Needs backend — kept as a placeholder
   async checkEmailExists(email: string): Promise<boolean> {
-    // Example placeholder logic:
-    // return await this.http.get(`/api/users/check-email?email=${email}`);
-    // For now, just return false
     return false;
+  }
+
+  // ----------------------------------------------------
+  // MAIN VALIDATION ROUTER
+  // ----------------------------------------------------
+  validateField(type: string, value: string) {
+    switch (type) {
+      case 'password': {
+        const pw = this.getPasswordRequirements(value);
+        return {
+          valid: pw.unmet.length === 0,
+          error: pw.unmet.length ? 'رمز عبور ضعیف است.' : '',
+          helper: pw.unmet, // unmet rules disappear as they are satisfied
+          extra: {
+            score: pw.score,
+            color: this.getPasswordStrengthColor(pw.score),
+            percentage: this.getPasswordStrengthPercentage(pw.score),
+          },
+        };
+      }
+
+      case 'nationalcode':
+        return {
+          valid: this.validateNationalCode(value),
+          error: value.length ? 'کد ملی باید دقیقا ۱۰ رقم باشد.' : '',
+          helper: [],
+        };
+
+      case 'phone':
+        return {
+          valid: this.validatePhoneNumber(value),
+          error: value.length ? 'شماره موبایل معتبر نیست.' : '',
+          helper: ['مثال صحیح: 9123456789', 'نباید با 0 شروع شود'],
+        };
+
+      case 'email':
+        return {
+          valid: this.validateEmail(value),
+          error: value.length ? 'ایمیل معتبر نیست.' : '',
+          helper: ['مثال: example@gmail.com'],
+        };
+
+      default:
+        return { valid: true, error: '', helper: [] };
+    }
   }
 }

@@ -1,13 +1,13 @@
-<div [class]="colSpan() || containerClassName() || 'w-full'" dir="rtl" style="--input-bg:#ffe2e2">
+<div [class]="colSpan() || containerClassName() || 'w-full'" dir="rtl" style="--input-bg: #ffe2e2">
     <div class="relative w-full rounded-lg px-3 py-3 bg-[color:var(--input-bg)]">
 
-        <!-- FIELDSET -->
+        <!-- FIELDSET (border colors) -->
         <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
-                'border-red-400': !!errorMessage(),
-                'border-purple-500': !errorMessage() && isFocused,
-                'border-gray-300': !errorMessage() && !isFocused,
-                'border-green-400': type() === 'password' && unmetRequirements.length === 0
-              }" aria-hidden="true">
+        'border-red-400': !!errorMessage(),
+        'border-purple-500': !errorMessage() && isFocused,
+        'border-gray-300': !errorMessage() && !isFocused,
+        'border-green-400': type() === 'password' && unmetPasswordRules.length === 0 && hasValue
+      }" aria-hidden="true">
             <legend *ngIf="label() && float" class="h-0 overflow-hidden transition-all duration-150 pl-2">
                 <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap" style="max-width: calc(100% - 8px)">
                     {{ label() }}
@@ -16,47 +16,51 @@
         </fieldset>
 
         <!-- MULTILINE TEXTAREA -->
-        <textarea *ngIf="multiline()" #textareaRef [id]="id()" [name]="name() || id()" [value]="value()"
+        <textarea *ngIf="multiline()" #textareaRef [id]="id()" [name]="name() || id()" [value]="actualValue"
             (input)="onInputChange($event); adjustTextareaHeight(textareaRef)" (focus)="onFocus()" (blur)="onBlur()"
             [rows]="minrows() || 3"
-            class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-y"
+            class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-none"
             [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
-            [placeholder]="float ? truncatedPlaceholder : ''">
-    </textarea>
+            [placeholder]="float ? truncatedPlaceholder : ''"></textarea>
 
         <!-- SINGLE LINE INPUT -->
         <div *ngIf="!multiline()" class="relative">
-            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="value()"
+            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="actualValue"
                 (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1"
                 [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
                 [placeholder]="float ? truncatedPlaceholder : ''" />
 
-            <!-- PASSWORD TOGGLE + STRENGTH -->
+            <!-- PASSWORD TOGGLE & STRENGTH -->
             <div *ngIf="type() === 'password' && hasValue" class="mt-2">
-                <div class="w-full bg-gray rounded h-1 mb-1">
-                    <div class="h-full rounded transition-all duration-200" [style.width.%]="strengthPrecentage"
-                        [class]="stengthColor"></div>
+
+                <!-- Strength bar -->
+                <div class="w-full bg-gray-200 rounded h-1 mb-1">
+                    <div class="h-full rounded transition-all duration-200" [style.width.%]="passwordStrengthPercent"
+                        [class]="passwordStrengthColor"></div>
                 </div>
-                <button type="button" (click)="togglePasswordVisibility()" class="absolute left-0 top-1/2 transform -translate-y-1/2
-                       text-gray-500 hover:text-gray-700 focus:outline-none
-                       transition-colors duration-200 p-1"
-                    [attr.aria-label]="isPasswordVisible ? 'Hide password' : 'Show password'">
-                    <svg *ngIf="isPasswordVisible" width="13" height="13" viewBox="0 0 24 24" fill="none"
+
+                <!-- Toggle button -->
+                <button type="button" (click)="togglePasswordVisibility()"
+                    class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors duration-200 p-1">
+                    <!-- visible -->
+                    <svg *ngIf="isPasswordVisible" width="14" height="14" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path
-                            d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242">
+                            d="M10.73 5.08a10.75 10.75 0 0 1 11.2 6.57a1 1 0 0 1 0 .7a10.8 10.8 0 0 1-1.44 2.49m-6.41-.68a3 3 0 0 1-4.24-4.25">
                         </path>
                         <path
-                            d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20">
+                            d="M17.48 17.5a10.75 10.75 0 0 1-15.42-5.15a1 1 0 0 1 0-.7a10.75 10.75 0 0 1 4.45-5.14M2 2l20 20">
                         </path>
                     </svg>
+
+                    <!-- hidden -->
                     <svg *ngIf="!isPasswordVisible" width="14" height="14" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path
-                            d="M21.257 10.962c.474.62.474 1.457 0 2.076C19.764 14.987 16.182 19 12 19c-4.182 0-7.764-4.013-9.257-5.962a1.692 1.692 0 0 1 0-2.076C4.236 9.013 7.818 5 12 5c4.182 0 7.764 4.013 9.257 5.962Z">
+                            d="M21.26 10.96c.47.62.47 1.46 0 2.07C19.76 14.99 16.18 19 12 19S4.24 14.99 2.74 13.03a1.7 1.7 0 0 1 0-2.07C4.24 9.01 7.82 5 12 5s7.76 4.01 9.26 5.96Z">
                         </path>
-                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path>
+                        <path d="M12 15a3 3 0 1 0 0-6a3 3 0 0 0 0 6Z"></path>
                     </svg>
                 </button>
             </div>
@@ -65,31 +69,32 @@
         <!-- FLOATING LABEL -->
         <label *ngIf="label()" [for]="id()"
             class="absolute transition-all duration-150 px-1 font-sans pointer-events-none right-2" [ngClass]="{
-             'text-xs': float,
-             'top-1/2 -translate-y-1/2 text-[11.5px] text-gray-600': !float,
-             '-top-[0.7rem]': float,
-             'text-purple-600': float && !errorMessage(),
-             'text-red-500': float && !!errorMessage()
-           }" style="background: transparent">
+        'text-xs -top-[0.7rem] text-purple-600': float && !errorMessage(),
+        'text-xs -top-[0.7rem] text-red-500': float && !!errorMessage(),
+        'top-1/2 -translate-y-1/2 text-[11.5px] text-gray-600': !float,
+        'text-xs -top-[0.7rem] text-green-600' : float && type()==='password'&& unmetPasswordRules.length === 0 && hasValue
+      }">
             {{ label() }}
         </label>
     </div>
 
-    <!-- ERROR TEXT -->
+    <!-- ERROR MESSAGE -->
     <p *ngIf="errorMessage()" class="text-red-500 font-sans text-[12.5px] mt-1 mr-1">
         {{ errorMessage() }}
     </p>
 
-    <!-- PASSWORD HELP -->
-    <div *ngIf="type() === 'password' && unmetRequirements.length > 0 && !errorMessage() && helperText()"
+    <!-- PASSWORD HELPER TEXT -->
+    <div *ngIf="type() === 'password' && unmetPasswordRules.length > 0 && !errorMessage() && helperText()"
         class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
         <p>پسورد باید شامل حداقل :</p>
         <ul>
-            <li *ngFor="let rule of unmetRequirements">{{ rule }}</li>
+            <li *ngFor="let rule of unmetPasswordRules">{{ rule }}</li>
         </ul>
     </div>
 
-    <div *ngIf="type() === 'password' && unmetRequirements.length === 0" class="text-xs text-green-600 mt-1 mr-1">
+    <!-- PASSWORD IS STRONG -->
+    <div *ngIf="type() === 'password' && unmetPasswordRules.length === 0 && hasValue"
+        class="text-xs text-green-600 mt-1 mr-1">
         پسورد قوی است.
     </div>
 </div>

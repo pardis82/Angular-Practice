@@ -8,14 +8,12 @@
             [(value)]="lastName"></app-text-field>
 
         <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
-            errorMessage="اجباری است"
             helperText="رمز باید شامل حداقل 8 کاراکتر، یک حرف بزرگ و گوچک،  یک عدد و یک کاراکتر خاص باشد"
             [(value)]="password"></app-text-field>
 
         <app-text-field label="ایمیل" placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
 
-        <app-text-field label="کد ملی" placeholder="کد ملی خود را وارد کنید" errorMessage="کد ملی باید 10 رقم باشد"
-            [(value)]="nationalCode"></app-text-field>
+        <app-text-field label="کد ملی" placeholder="کد ملی خود را وارد کنید" [(value)]="nationalCode"></app-text-field>
 
 
         <app-select [options]="countries" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="کشورها"

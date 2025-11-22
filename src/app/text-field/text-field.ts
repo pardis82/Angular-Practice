@@ -33,7 +33,6 @@ export class TextField {
   // ----- SIGNAL OUTPUTS -----
   value = model<string>('');
   valueChange = output<string>();
-
   focused = output<void>();
   blurred = output<void>();
 
@@ -41,14 +40,10 @@ export class TextField {
   isFocused = false;
   isPasswordVisible = false;
   actualType = this.type();
-  passwordStrength = 0;
-  passwordRequirements = {
-    lowerCase: false,
-    upperCase: false,
-    hasNumbers: false,
-    hasSpecialCharacters: false,
-    isLengthy: false,
-  };
+
+  // Password UI state
+  passwordScore = 0;
+  unmetPasswordRules: string[] = [];
 
   constructor(private validation: ValidationService) {
     this.actualType = this.type() || 'text';
@@ -80,59 +75,40 @@ export class TextField {
     return p.length > 30 ? p.substring(0, 30) + '...' : p;
   }
 
-  get strengthPrecentage(): number {
-    return this.validation.getPasswordStrengthPercentage(this.passwordStrength);
+  get passwordStrengthPercent(): number {
+    return this.validation.getPasswordStrengthPercentage(this.passwordScore);
   }
 
-  get stengthColor(): string {
-    return this.validation.getPasswordStrengthColor(this.passwordStrength);
+  get passwordStrengthColor(): string {
+    return this.validation.getPasswordStrengthColor(this.passwordScore);
   }
 
-  get unmetRequirements(): string[] {
-    const unmet: string[] = [];
-    if (!this.passwordRequirements.lowerCase) unmet.push('•  یک حرف کوچک');
-    if (!this.passwordRequirements.upperCase) unmet.push('•  یک حرف بزرگ');
-    if (!this.passwordRequirements.hasNumbers) unmet.push('•  یک عدد');
-    if (!this.passwordRequirements.hasSpecialCharacters)
-      unmet.push('•  یکی از این کاراکتر ها (@ # $ % ! ?)');
-    if (!this.passwordRequirements.isLengthy) unmet.push('• حداقل 8 کاراکتر');
-    return unmet;
-  }
-
-  // ----- EVENTS -----
+  // ----- MAIN INPUT HANDLER -----
   onInputChange(e: Event) {
-    const val = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
+    const inputEl = e.target as HTMLInputElement | HTMLTextAreaElement;
+    let val = inputEl.value;
+
+    // Send value upward
     this.value.set(val);
     this.valueChange.emit(val);
 
-    switch (this.type()) {
-      case 'password':
-        const pw = this.validation.getPasswordRequirements(val);
-        this.passwordRequirements = pw.requirements;
-        this.passwordStrength = pw.score;
-        this.errorMessage.set('');
-        break;
+    // ALWAYS use ValidationService to validate
+    const v = this.validation.validateField(this.type(), val);
 
-      case 'nationalcode':
-        this.errorMessage.set(
-          this.validation.validateNationalCode(val) ? '' : 'کد ملی باید ۱۰ رقم باشد'
-        );
-        break;
+    // Assign values returned from ValidationService
+    this.errorMessage.set(v.error);
 
-      case 'phone':
-        this.errorMessage.set(
-          this.validation.validatePhoneNumber(val) ? '' : 'شماره موبایل معتبر نیست'
-        );
-        // optional: auto-format with prefix
-        this.value.set(this.validation.formatPhoneNumber(val));
-        break;
+    // ----- PASSWORD SPECIAL HANDLING -----
+    if (this.type() === 'password') {
+      this.passwordScore = v.extra?.score || 0;
+      this.unmetPasswordRules = v.helper || [];
+    }
 
-      case 'email':
-        this.errorMessage.set(this.validation.validateEmail(val) ? '' : 'ایمیل معتبر نیست');
-        break;
-
-      default:
-        this.errorMessage.set('');
+    // ----- PHONE NUMBER optional formatting -----
+    // Only format AFTER validation to keep UX good
+    if (this.type() === 'phone') {
+      // Don't apply prefix while typing (messes UX)
+      // Only apply prefix ON BLUR
     }
   }
 
@@ -144,6 +120,13 @@ export class TextField {
   onBlur() {
     this.isFocused = false;
     this.blurred.emit();
+
+    // Auto-format phone number ONLY after user finishes typing
+    if (this.type() === 'phone') {
+      const formatted = this.validation.formatPhoneNumber(this.value(), '+98');
+      this.value.set(formatted);
+      this.valueChange.emit(formatted);
+    }
   }
 
   togglePasswordVisibility(): void {
@@ -153,6 +136,7 @@ export class TextField {
     }
   }
 
+  // ----- TEXTAREA AUTO RESIZE -----
   adjustTextareaHeight(textarea: HTMLTextAreaElement) {
     if (!this.multiline()) return;
 
