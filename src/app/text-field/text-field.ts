@@ -12,6 +12,7 @@ import { ValidationService } from '../../services/validation/validation';
 export class TextField {
   // ----- SIGNAL INPUTS -----
   label = input<string>();
+
   type = input<string>('text'); // text, password, email, phone, nationalcode
   helperText = input<string>();
   errorMessage = model<string>();
