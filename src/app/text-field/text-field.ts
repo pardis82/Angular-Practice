@@ -1,6 +1,7 @@
 import { Component, input, output, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ValidationService } from '../../services/validation/validation';
 
 @Component({
   selector: 'app-text-field',
@@ -11,9 +12,9 @@ import { FormsModule } from '@angular/forms';
 export class TextField {
   // ----- SIGNAL INPUTS -----
   label = input<string>();
-  type = input<string>('text');
+  type = input<string>('text'); // text, password, email, phone, nationalcode
   helperText = input<string>();
-  errorMessage = input<string>();
+  errorMessage = model<string>();
   containerClassName = input<string>();
   className = input<string>();
 
@@ -29,11 +30,10 @@ export class TextField {
   id = input<string>();
   name = input<string>();
 
-  // value with two-way binding
+  // ----- SIGNAL OUTPUTS -----
   value = model<string>('');
   valueChange = output<string>();
 
-  // ----- SIGNAL OUTPUTS -----
   focused = output<void>();
   blurred = output<void>();
 
@@ -42,7 +42,6 @@ export class TextField {
   isPasswordVisible = false;
   actualType = this.type();
   passwordStrength = 0;
-
   passwordRequirements = {
     lowerCase: false,
     upperCase: false,
@@ -51,13 +50,12 @@ export class TextField {
     isLengthy: false,
   };
 
-  constructor() {
+  constructor(private validation: ValidationService) {
     this.actualType = this.type() || 'text';
   }
 
   ngOnChanges() {
     this.actualType = this.type() || 'text';
-
     if (this.type() !== 'password') {
       this.isPasswordVisible = false;
     }
@@ -83,62 +81,58 @@ export class TextField {
   }
 
   get strengthPrecentage(): number {
-    return (this.passwordStrength / 5) * 100;
+    return this.validation.getPasswordStrengthPercentage(this.passwordStrength);
   }
 
   get stengthColor(): string {
-    if (this.passwordStrength <= 1) return 'bg-red-600';
-    if (this.passwordStrength === 2) return 'bg-yellow-400';
-    if (this.passwordStrength === 3) return 'bg-orange-300';
-    if (this.passwordStrength === 4) return 'bg-orange-500';
-    return 'bg-green-400';
+    return this.validation.getPasswordStrengthColor(this.passwordStrength);
   }
 
   get unmetRequirements(): string[] {
     const unmet: string[] = [];
-
     if (!this.passwordRequirements.lowerCase) unmet.push('•  یک حرف کوچک');
-
     if (!this.passwordRequirements.upperCase) unmet.push('•  یک حرف بزرگ');
-
     if (!this.passwordRequirements.hasNumbers) unmet.push('•  یک عدد');
-
     if (!this.passwordRequirements.hasSpecialCharacters)
       unmet.push('•  یکی از این کاراکتر ها (@ # $ % ! ?)');
-
-    if (!this.passwordRequirements.isLengthy) unmet.push('• 8 کاراکتر ');
-
+    if (!this.passwordRequirements.isLengthy) unmet.push('• حداقل 8 کاراکتر');
     return unmet;
   }
 
   // ----- EVENTS -----
-
-  calculatePasswordStrength(value: string) {
-    // Update requirement flags
-    this.passwordRequirements.lowerCase = /[a-z]/.test(value);
-    this.passwordRequirements.upperCase = /[A-Z]/.test(value);
-    this.passwordRequirements.hasNumbers = /[0-9]/.test(value);
-    this.passwordRequirements.hasSpecialCharacters = /[@#$%^&*!?]/.test(value);
-    this.passwordRequirements.isLengthy = value.length >= 8;
-
-    // Count how many are true
-    let score = 0;
-    if (this.passwordRequirements.isLengthy) score++;
-    if (this.passwordRequirements.upperCase) score++;
-    if (this.passwordRequirements.lowerCase) score++;
-    if (this.passwordRequirements.hasNumbers) score++;
-    if (this.passwordRequirements.hasSpecialCharacters) score++;
-
-    this.passwordStrength = score;
-  }
-
   onInputChange(e: Event) {
     const val = (e.target as HTMLInputElement | HTMLTextAreaElement).value;
     this.value.set(val);
     this.valueChange.emit(val);
 
-    if (this.type() === 'password') {
-      this.calculatePasswordStrength(val);
+    switch (this.type()) {
+      case 'password':
+        const pw = this.validation.getPasswordRequirements(val);
+        this.passwordRequirements = pw.requirements;
+        this.passwordStrength = pw.score;
+        this.errorMessage.set('');
+        break;
+
+      case 'nationalcode':
+        this.errorMessage.set(
+          this.validation.validateNationalCode(val) ? '' : 'کد ملی باید ۱۰ رقم باشد'
+        );
+        break;
+
+      case 'phone':
+        this.errorMessage.set(
+          this.validation.validatePhoneNumber(val) ? '' : 'شماره موبایل معتبر نیست'
+        );
+        // optional: auto-format with prefix
+        this.value.set(this.validation.formatPhoneNumber(val));
+        break;
+
+      case 'email':
+        this.errorMessage.set(this.validation.validateEmail(val) ? '' : 'ایمیل معتبر نیست');
+        break;
+
+      default:
+        this.errorMessage.set('');
     }
   }
 
