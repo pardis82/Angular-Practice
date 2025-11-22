@@ -9,7 +9,7 @@
 
         <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
             errorMessage="اجباری است"
-            helperText="رمز باید حداقل 8 کاراکتر، شامل حرف بزرگ و گوچک، عدد و حداقل یک کاراکتر خاص باشد"
+            helperText="رمز باید شامل حداقل 8 کاراکتر، یک حرف بزرگ و گوچک،  یک عدد و یک کاراکتر خاص باشد"
             [(value)]="password"></app-text-field>
 
         <app-text-field label="ایمیل" placeholder="ایمیل خود را وارد کنید" [(value)]="email"></app-text-field>
@@ -27,7 +27,7 @@
     </div>
 </div>
 <div dir="rtl" class=" p-4 border rounded-lg mt-20 bg-gray-100 ">
-    <div class="grid lg:grid-cols-4 md:grid-cols-6 gap-4 ">
+    <div class="grid lg:grid-cols-3 md:grid-cols-6 sm:grid-cols-12 gap-4 ">
         <app-text-field label="نام" placeholder="نام خود را وارد کنید" helperText="نام باید حداقل 3 حرف باشد"
             [(value)]="firstName2"></app-text-field>
 
@@ -48,8 +48,8 @@
             placeholder="سطح مورد نظر خود را انتخاب کنید" [value]="selectedLevel"
             (valueChange)="selectedLevel = $event">
         </app-select>
-        <app-select [options]="Level" [showSelectAll]="true" label="سطح" placeholder="سطح مورد نظر خود را انتخاب کنید"
-            [value]="selectedLevel" (valueChange)="selectedLevel = $event">
+        <app-select [options]="Level2" [showSelectAll]="true" label="سطح" placeholder="سطح مورد نظر خود را انتخاب کنید"
+            [value]="selectedLevel2" (valueChange)="selectedLevel2 = $event">
         </app-select>
     </div>
 </div>

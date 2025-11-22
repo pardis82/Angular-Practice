@@ -43,7 +43,12 @@ export class FormComponent {
     { value: 'intermediate', label: 'B1' },
     { value: 'advanced', label: 'C1' },
   ];
-
+  selectedLevel2: SelectValue = [];
+  Level2: Option[] = [
+    { value: 'beginner', label: 'A1' },
+    { value: 'intermediate', label: 'B1' },
+    { value: 'advanced', label: 'C1' },
+  ];
   onValueChange(v: SelectValue) {
     console.log('Selected countries:', v);
     console.log('Type of v:', typeof v);
