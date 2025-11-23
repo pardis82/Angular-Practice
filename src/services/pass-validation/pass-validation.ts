@@ -31,7 +31,7 @@ export class PassValidation {
       lowerCase: /[a-z]/.test(password),
       upperCase: /[A-Z]/.test(password),
       hasNumbers: /[0-9]/.test(password),
-      isLengthy: password.length > 8,
+      isLengthy: password.length >= 8,
       hasSpecialChars: /[@$&!#?%]/.test(password),
     };
     const score = Object.values(requirements).filter(Boolean).length;
