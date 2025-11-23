@@ -2,7 +2,6 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    
   ],
 
   theme: {
@@ -20,4 +19,3 @@ module.exports = {
   },
   plugins: [],
 }
-
