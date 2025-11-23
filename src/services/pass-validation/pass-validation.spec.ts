@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ValidationService } from './validation';
+import { PassValidation } from './pass-validation';
 
-describe('Validation', () => {
-  let component: ValidationService;
-  let fixture: ComponentFixture<ValidationService>;
+describe('PassValidation', () => {
+  let component: PassValidation;
+  let fixture: ComponentFixture<PassValidation>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ValidationService],
-    }).compileComponents();
+      imports: [PassValidation]
+    })
+    .compileComponents();
 
-    fixture = TestBed.createComponent(ValidationService);
+    fixture = TestBed.createComponent(PassValidation);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

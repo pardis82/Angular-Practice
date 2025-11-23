@@ -2,6 +2,11 @@ import { Component, input, output, model } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ValidationService } from '../../services/validation/validation';
+import { PassValidation } from '../../services/pass-validation/pass-validation';
+import {
+  IpasswordRequirements,
+  IPasswordValidation,
+} from '../../services/pass-validation/pass-validation';
 
 @Component({
   selector: 'app-text-field',
@@ -48,7 +53,7 @@ export class TextField {
   passwordColor = '';
   passwordPercentage = 0;
 
-  constructor(private validation: ValidationService) {
+  constructor(private validation: ValidationService, private passwordValidation: PassValidation) {
     this.actualType = this.type() || 'text';
   }
 
@@ -116,11 +121,11 @@ export class TextField {
   }
 
   get passwordStrengthPercent(): number {
-    return this.validation.getPasswordStrengthPercentage(this.passwordScore);
+    return this.passwordValidation.getPassPrecentage(this.passwordScore);
   }
 
   get passwordStrengthColor(): string {
-    return this.validation.getPasswordStrengthColor(this.passwordScore);
+    return this.passwordValidation.getStrengthColor(this.passwordScore);
   }
 
   // ----- MAIN INPUT HANDLER -----
@@ -133,22 +138,28 @@ export class TextField {
     this.valueChange.emit(val);
 
     // ALWAYS use ValidationService to validate
-    const v = this.validation.validateField(this.type(), val);
-
-    // Assign values returned from ValidationService
-    this.errorMessage.set(v.error);
-
-    // ----- PASSWORD SPECIAL HANDLING -----
     if (this.type() === 'password') {
-      this.passwordScore = v.extra?.score || 0;
-      this.passwordColor = v.extra?.color || '';
-      this.passwordPercentage = v.extra?.percentage || 0;
+      // Use PassValidation service for passwords
+      const passwordResult: IPasswordValidation = this.passwordValidation.validatePassword(val);
 
-      // The unmet rules array (strings)
-      this.unmetPasswordRules = v.helper || [];
-    }
+      // Assign password-specific values
+      this.passwordScore = passwordResult.extra.score;
+      this.passwordColor = passwordResult.extra.color;
+      this.passwordPercentage = passwordResult.extra.percentage;
+      this.unmetPasswordRules = passwordResult.helper;
 
-    if (this.type() === 'phone') {
+      // Set error message only if password is invalid and has value
+      this.errorMessage.set('');
+    } else {
+      // Use general ValidationService for other field types
+      const v = this.validation.validateField(this.type(), val);
+      this.errorMessage.set(v.error);
+
+      // Clear password-specific properties for non-password fields
+      this.passwordScore = 0;
+      this.passwordColor = '';
+      this.passwordPercentage = 0;
+      this.unmetPasswordRules = [];
     }
   }
 
@@ -160,15 +171,7 @@ export class TextField {
   onBlur() {
     this.isFocused = false;
     this.blurred.emit();
-
-    // Auto-format phone number ONLY after user finishes typing
-    if (this.type() === 'phone') {
-      const formatted = this.validation.formatPhoneNumber(this.value(), '+98');
-      this.value.set(formatted);
-      this.valueChange.emit(formatted);
-    }
   }
-
   togglePasswordVisibility(): void {
     if (this.type() === 'password') {
       this.isPasswordVisible = !this.isPasswordVisible;

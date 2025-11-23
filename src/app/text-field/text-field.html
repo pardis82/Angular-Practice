@@ -36,8 +36,8 @@
 
                 <!-- Strength bar -->
                 <div class="w-full bg-gray-300 rounded h-1 mb-1  ">
-                    <div class="h-full rounded transition-all duration-200  " [style.width.%]="passwordStrengthPercent"
-                        [class]="passwordStrengthColor"></div>
+                    <div class="h-full rounded transition-all duration-200  " [style.width.%]="passwordPercentage"
+                        [class]="passwordColor"></div>
                 </div>
 
                 <!-- Toggle button -->
@@ -84,7 +84,10 @@
         class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
         <p>{{helperText()}}</p>
         <ul>
-            <li *ngFor="let rule of unmetPasswordRules">{{ rule }}</li>
+            <li *ngFor="let rule of unmetPasswordRules">
+                <span class="text-red-500 mr-1 text-xs">•</span>
+                {{ rule }}
+            </li>
         </ul>
     </div>
 
