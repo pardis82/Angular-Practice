@@ -78,14 +78,17 @@
     <p *ngIf="errorMessage()" class="text-red-500 font-sans text-[12.5px] mt-1 mr-1">
         {{ errorMessage() }}
     </p>
+    <p *ngIf="helperText() && !errorMessage() && type()!='password'"
+        class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
+        {{helperText()}}
+    </p>
 
     <!-- PASSWORD HELPER TEXT -->
-    <div *ngIf="type() === 'password' && unmetPasswordRules.length >0 && !errorMessage() && helperText()"
+    <div *ngIf="type() === 'password' && unmetPasswordRules.length >0 && !errorMessage() && helperText() && hasValue"
         class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
         <p>{{helperText()}}</p>
         <ul>
             <li *ngFor="let rule of unmetPasswordRules">
-                <span class="text-red-500 mr-1 text-xs">•</span>
                 {{ rule }}
             </li>
         </ul>

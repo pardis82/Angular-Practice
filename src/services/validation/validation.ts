@@ -9,39 +9,6 @@ export class ValidationService {
   // ----------------------------------------------------
   // PASSWORD VALIDATION
   // ----------------------------------------------------
-  getPasswordRequirements(password: string) {
-    const requirements = {
-      lowerCase: /[a-z]/.test(password),
-      upperCase: /[A-Z]/.test(password),
-      hasNumbers: /[0-9]/.test(password),
-      hasSpecialCharacters: /[@#$%^&*!?]/.test(password),
-      isLengthy: password.length >= 8,
-    };
-
-    const score = Object.values(requirements).filter(Boolean).length;
-
-    const unmet: string[] = [];
-
-    if (!requirements.lowerCase) unmet.push('•  یک حرف کوچک');
-    if (!requirements.upperCase) unmet.push('•  یک حرف بزرگ');
-    if (!requirements.hasNumbers) unmet.push('•  یک عدد');
-    if (!requirements.hasSpecialCharacters) unmet.push('•  یکی از این کاراکترها (@ # $ % ! ?)');
-    if (!requirements.isLengthy) unmet.push('•  حداقل 8 کاراکتر');
-
-    return { requirements, score, unmet };
-  }
-
-  getPasswordStrengthColor(score: number): string {
-    if (score <= 1) return 'bg-red-600';
-    if (score === 2) return 'bg-yellow-500';
-    if (score === 3) return 'bg-yellow-400';
-    if (score === 4) return 'bg-yellow-300';
-    return 'bg-green-400';
-  }
-
-  getPasswordStrengthPercentage(score: number): number {
-    return (score / 5) * 100;
-  }
 
   // ----------------------------------------------------
   // NATIONAL CODE VALIDATION
@@ -84,24 +51,7 @@ export class ValidationService {
   // MAIN VALIDATION ROUTER
   // ----------------------------------------------------
   validateField(type: string, value: string) {
-    if (!value || value.trim().length === 0) {
-      return { error: '', helper: [], extra: {} };
-    }
-
     switch (type) {
-      case 'password': {
-        const pw = this.getPasswordRequirements(value);
-        return {
-          valid: pw.unmet.length === 0,
-          helper: pw.unmet, // unmet rules disappear as they are satisfied
-          extra: {
-            score: pw.score,
-            color: this.getPasswordStrengthColor(pw.score),
-            percentage: this.getPasswordStrengthPercentage(pw.score),
-          },
-        };
-      }
-
       case 'nationalcode':
         return {
           valid: this.validateNationalCode(value),
