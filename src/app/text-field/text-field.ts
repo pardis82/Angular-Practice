@@ -179,6 +179,35 @@ export class TextField {
     }
   }
 
+  getDisplayMessage(): {
+    type: 'error' | 'password-strong' | 'password-helper' | 'general-helper' | 'none';
+    content: any;
+  } {
+    if (this.errorMessage()) {
+      return { type: 'error', content: this.errorMessage() };
+    }
+
+    if (this.type() === 'password' && this.hasValue) {
+      if (this.unmetPasswordRules.length === 0) {
+        return { type: 'password-strong', content: null };
+      } else {
+        return {
+          type: 'password-helper',
+          content: {
+            helperText: this.helperText(),
+            rules: this.unmetPasswordRules,
+          },
+        };
+      }
+    }
+
+    if (this.helperText() && this.type() !== 'password') {
+      return { type: 'general-helper', content: this.helperText() };
+    }
+
+    return { type: 'none', content: null };
+  }
+
   // ----- TEXTAREA AUTO RESIZE -----
   adjustTextareaHeight(textarea: HTMLTextAreaElement) {
     if (!this.multiline()) return;

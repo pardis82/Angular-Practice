@@ -74,33 +74,39 @@
         </label>
     </div>
 
-    <!-- ERROR MESSAGE -->
-    <p *ngIf="errorMessage()" class="text-red-500 font-sans text-[12.5px] mt-1 mr-1">
-        {{ errorMessage() }}
-    </p>
-    <p *ngIf="helperText() && !errorMessage() && type()!='password'"
-        class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
-        {{helperText()}}
-    </p>
+    <div class="mt-1 mr-1">
+        <ng-container [ngSwitch]="getDisplayMessage().type">
 
-    <!-- PASSWORD HELPER TEXT -->
-    <div *ngIf="type() === 'password' && unmetPasswordRules.length >0 && !errorMessage() && helperText() && hasValue"
-        class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
-        <p>{{helperText()}}</p>
-        <ul>
-            <li *ngFor="let rule of unmetPasswordRules">
-                {{ rule }}
-            </li>
-        </ul>
-    </div>
+            <!-- ERROR -->
+            <p *ngSwitchCase="'error'" class="text-red-500 font-sans text-[12.5px]">
+                {{ getDisplayMessage().content }}
+            </p>
 
-    <!-- PASSWORD IS STRONG -->
-    <div *ngIf="type() === 'password' && unmetPasswordRules.length === 0 && hasValue"
-        class="text-xs text-green-600 mt-1 flex items-center gap-1">
-        <svg width="10" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        پسورد قوی
+            <!-- PASSWORD STRONG -->
+            <div *ngSwitchCase="'password-strong'" class="text-xs text-green-600 flex items-center gap-1">
+                <svg width="10" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                پسورد قوی
+            </div>
+
+            <!-- PASSWORD HELPER -->
+            <div *ngSwitchCase="'password-helper'" class="text-gray-500 font-sans text-[12.5px]">
+                <p *ngIf="getDisplayMessage().content.helperText">
+                    {{ getDisplayMessage().content.helperText }}
+                </p>
+                <ul>
+                    <li *ngFor="let rule of getDisplayMessage().content.rules">
+                        {{ rule }}
+                    </li>
+                </ul>
+            </div>
+
+            <!-- GENERAL HELPER -->
+            <p *ngSwitchCase="'general-helper'" class="text-gray-500 font-sans text-[12.5px]">
+                {{ getDisplayMessage().content }}
+            </p>
+        </ng-container>
     </div>
 </div>
