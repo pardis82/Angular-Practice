@@ -84,6 +84,10 @@ export class ValidationService {
   // MAIN VALIDATION ROUTER
   // ----------------------------------------------------
   validateField(type: string, value: string) {
+    if (!value || value.trim().length === 0) {
+      return { error: '', helper: [], extra: {} };
+    }
+
     switch (type) {
       case 'password': {
         const pw = this.getPasswordRequirements(value);
