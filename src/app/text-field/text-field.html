@@ -35,9 +35,9 @@
             <div *ngIf="type() === 'password' && hasValue" class="mt-2">
 
                 <!-- Strength bar -->
-                <div class="w-full bg-gray-200 rounded h-1 mb-1">
-                    <div class="h-full rounded transition-all duration-200" [style.width.%]="passwordStrengthPercent"
-                        [class]="passwordStrengthColor"></div>
+                <div class="w-full bg-gray-300 rounded h-1 mb-1 px-2 ">
+                    <div class="h-full rounded transition-all duration-200 -mx-2 "
+                        [style.width.%]="passwordStrengthPercent+2.75 " [class]="passwordStrengthColor"></div>
                 </div>
 
                 <!-- Toggle button -->
@@ -88,9 +88,9 @@
     </p>
 
     <!-- PASSWORD HELPER TEXT -->
-    <div *ngIf="type() === 'password' && unmetPasswordRules.length > 0 && !errorMessage() && helperText()"
+    <div *ngIf="type() === 'password' && unmetPasswordRules.length >= 0 && !errorMessage() && helperText()"
         class="text-gray-500 font-sans text-[12.5px] mt-1 mr-1">
-        <p>پسورد باید شامل حداقل :</p>
+        <p>{{helperText()}}</p>
         <ul>
             <li *ngFor="let rule of unmetPasswordRules">{{ rule }}</li>
         </ul>
@@ -98,7 +98,11 @@
 
     <!-- PASSWORD IS STRONG -->
     <div *ngIf="type() === 'password' && unmetPasswordRules.length === 0 && hasValue"
-        class="text-xs text-green-600 mt-1 mr-1">
+        class="text-xs text-green-600 mt-1 flex items-center gap-1">
+        <svg width="10" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="3"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
         پسورد قوی است.
     </div>
 </div>

@@ -93,7 +93,6 @@ export class ValidationService {
         const pw = this.getPasswordRequirements(value);
         return {
           valid: pw.unmet.length === 0,
-          error: pw.unmet.length ? 'رمز عبور ضعیف است.' : '',
           helper: pw.unmet, // unmet rules disappear as they are satisfied
           extra: {
             score: pw.score,
