@@ -33,9 +33,9 @@ export class ValidationService {
 
   getPasswordStrengthColor(score: number): string {
     if (score <= 1) return 'bg-red-600';
-    if (score === 2) return 'bg-yellow-400';
-    if (score === 3) return 'bg-orange-300';
-    if (score === 4) return 'bg-orange-500';
+    if (score === 2) return 'bg-yellow-500';
+    if (score === 3) return 'bg-yellow-400';
+    if (score === 4) return 'bg-yellow-300';
     return 'bg-green-400';
   }
 

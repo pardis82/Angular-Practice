@@ -45,6 +45,8 @@ export class TextField {
   // Password UI state
   passwordScore = 0;
   unmetPasswordRules: string[] = [];
+  passwordColor = '';
+  passwordPercentage = 0;
 
   constructor(private validation: ValidationService) {
     this.actualType = this.type() || 'text';
@@ -102,14 +104,14 @@ export class TextField {
     // ----- PASSWORD SPECIAL HANDLING -----
     if (this.type() === 'password') {
       this.passwordScore = v.extra?.score || 0;
+      this.passwordColor = v.extra?.color || '';
+      this.passwordPercentage = v.extra?.percentage || 0;
+
+      // The unmet rules array (strings)
       this.unmetPasswordRules = v.helper || [];
     }
 
-    // ----- PHONE NUMBER optional formatting -----
-    // Only format AFTER validation to keep UX good
     if (this.type() === 'phone') {
-      // Don't apply prefix while typing (messes UX)
-      // Only apply prefix ON BLUR
     }
   }
 

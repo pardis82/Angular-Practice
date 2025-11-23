@@ -69,12 +69,15 @@
         <!-- FLOATING LABEL -->
         <label *ngIf="label()" [for]="id()"
             class="absolute transition-all duration-150 px-1 font-sans pointer-events-none right-2" [ngClass]="[
-         float ? 'text-xs -top-[0.7rem]' : 'top-1/2 -translate-y-1/2 text-[11.5px]',
-         errorMessage() && hasValue ? 'text-red-500' : '',
-         !errorMessage() && float && type() !== 'password' ? 'text-purple-600' : '',
-         !errorMessage() && float && type() === 'password' ? 'text-purple-600' : '',
-         !errorMessage() && float && type() === 'password' && unmetPasswordRules.length === 0 && hasValue ? 'text-green-600' : ''
-       ]">
+  float ? 'text-xs -top-[0.7rem] text-purple-600' : 'top-1/2 -translate-y-1/2 text-[11.5px]',
+  errorMessage() && hasValue ? 'text-red-500' : '',
+  !errorMessage() && float && type() === 'password' && unmetPasswordRules.length === 0 && hasValue
+    ? 'text-green-600'
+    : '',
+  !errorMessage() && float && type() === 'password'
+    ? 'text-purple-600'
+    : ''
+]">
             {{ label() }}
         </label>
     </div>
