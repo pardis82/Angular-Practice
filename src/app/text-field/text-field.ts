@@ -60,6 +60,47 @@ export class TextField {
   }
 
   // ----- GETTERS -----
+  get float(): boolean {
+    return this.hasValue || this.isFocused;
+  }
+
+  getLabelClasses() {
+    const classes = [];
+    const shouldFloat = this.float; // Call once and reuse
+
+    // Float positioning
+    if (shouldFloat) {
+      classes.push('text-xs -top-[0.7rem]');
+    } else {
+      classes.push('top-1/2 -translate-y-1/2 text-[11.5px]');
+    }
+
+    // Error state (highest priority)
+    if (this.errorMessage() && this.hasValue) {
+      classes.push('text-red-500');
+      return classes;
+    }
+
+    // Success state for password when all rules are met
+    // Removed the hasValue check from here since float() already implies hasValue when not focused
+    if (
+      !this.errorMessage() &&
+      this.type() === 'password' &&
+      this.unmetPasswordRules.length === 0 &&
+      shouldFloat &&
+      this.hasValue
+    ) {
+      classes.push('text-green-600');
+      return classes;
+    }
+
+    // Default purple state - only apply if we haven't already returned
+    if (!this.errorMessage() && shouldFloat) {
+      classes.push('text-purple-600');
+    }
+
+    return classes;
+  }
   get actualValue(): string {
     const v = this.value();
     return v !== undefined && v !== null ? v : this.defaultValue() || '';
@@ -67,10 +108,6 @@ export class TextField {
 
   get hasValue(): boolean {
     return !!this.actualValue && this.actualValue.length > 0;
-  }
-
-  get float(): boolean {
-    return this.hasValue || this.isFocused;
   }
 
   get truncatedPlaceholder(): string {

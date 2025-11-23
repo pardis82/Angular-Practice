@@ -3,11 +3,11 @@
 
         <!-- FIELDSET (border colors) -->
         <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
-        'border-red-400': !!errorMessage(),
-        'border-purple-500': !errorMessage() && isFocused,
-        'border-gray-300': !errorMessage() && !isFocused,
-        'border-green-400': type() === 'password' && unmetPasswordRules.length === 0 && hasValue
-      }" aria-hidden="true">
+  'border-red-400': !!errorMessage(),
+  'border-green-400': type() === 'password' && unmetPasswordRules.length === 0 && hasValue,
+  'border-purple-500': !errorMessage() && isFocused && !(type() === 'password' && unmetPasswordRules.length === 0 && hasValue),
+  'border-gray-300': !errorMessage() && !isFocused
+}" aria-hidden="true">
             <legend *ngIf="label() && float" class="h-0 overflow-hidden transition-all duration-150 pl-2">
                 <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap" style="max-width: calc(100% - 8px)">
                     {{ label() }}
@@ -68,16 +68,8 @@
 
         <!-- FLOATING LABEL -->
         <label *ngIf="label()" [for]="id()"
-            class="absolute transition-all duration-150 px-1 font-sans pointer-events-none right-2" [ngClass]="[
-  float ? 'text-xs -top-[0.7rem] text-purple-600' : 'top-1/2 -translate-y-1/2 text-[11.5px]',
-  errorMessage() && hasValue ? 'text-red-500' : '',
-  !errorMessage() && float && type() === 'password' && unmetPasswordRules.length === 0 && hasValue
-    ? 'text-green-600'
-    : '',
-  !errorMessage() && float && type() === 'password'
-    ? 'text-purple-600'
-    : ''
-]">
+            class="absolute transition-all duration-150 px-1 font-sans pointer-events-none right-2"
+            [ngClass]="getLabelClasses()">
             {{ label() }}
         </label>
     </div>
