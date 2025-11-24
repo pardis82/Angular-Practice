@@ -18,7 +18,7 @@ export class TextField {
   // ----- SIGNAL INPUTS -----
   label = input<string>();
 
-  type = input<string>('text'); // text, password, email, phone, nationalcode
+  type = input<string>('text'); // text, password, email, phone, nationalcode , username
   helperText = input<string>();
   errorMessage = model<string>();
   containerClassName = input<string>();
@@ -69,7 +69,7 @@ export class TextField {
     return this.hasValue || this.isFocused;
   }
 
-  getLabelClasses() {
+  getLabelTextClasses() {
     const classes = [];
     const shouldFloat = this.float; // Call once and reuse
 
@@ -139,6 +139,10 @@ export class TextField {
 
     // ALWAYS use ValidationService to validate
     if (this.type() === 'password') {
+      if(!val) {
+        this.isPasswordVisible= false;
+        this.actualType= 'password'
+      }
       // Use PassValidation service for passwords
       const passwordResult: IPasswordValidation = this.passwordValidation.validatePassword(val);
 
@@ -173,6 +177,9 @@ export class TextField {
     this.blurred.emit();
   }
   togglePasswordVisibility(): void {
+    if(!this.value())
+      return
+    
     if (this.type() === 'password') {
       this.isPasswordVisible = !this.isPasswordVisible;
       this.actualType = this.isPasswordVisible ? 'text' : 'password';

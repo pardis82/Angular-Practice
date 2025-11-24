@@ -21,6 +21,7 @@ export class FormComponent {
   lastName2 = '';
   password2 = '';
   email = '';
+  username=''
   nationalCode = '';
   selectedCountries: SelectValue = [];
   countries: Option[] = [
@@ -59,11 +60,11 @@ export class FormComponent {
     }
     this.selectedCountries = v as Option[];
   }
-  onFieldFocus(): void {
-    console.log('Field focused');
-  }
+  // onFieldFocus(): void {
+  //   console.log('Field focused');
+  // }
 
-  onFieldBlur(): void {
-    console.log('Field blurred');
-  }
+  // onFieldBlur(): void {
+  //   console.log('Field blurred');
+  // }
 }
