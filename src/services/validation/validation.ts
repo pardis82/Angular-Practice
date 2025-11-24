@@ -6,11 +6,6 @@ import { Injectable } from '@angular/core';
 export class ValidationService {
   constructor() {}
 
-  // ----------------------------------------------------
-  // PASSWORD VALIDATION
-  // ----------------------------------------------------
-
-  // ----------------------------------------------------
   // NATIONAL CODE VALIDATION
   // ----------------------------------------------------
   validateNationalCode(code: string): boolean {

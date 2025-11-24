@@ -1,10 +1,10 @@
-import { Component, input, output, model } from '@angular/core';
+import { Component, input, output, model , signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ValidationService } from '../../services/validation/validation';
 import { PassValidation } from '../../services/pass-validation/pass-validation';
+import { UserNameValidation } from '../../services/user-name-validation/user-name-validation';
 import {
-  IpasswordRequirements,
   IPasswordValidation,
 } from '../../services/pass-validation/pass-validation';
 
@@ -49,11 +49,16 @@ export class TextField {
 
   // Password UI state
   passwordScore = 0;
-  unmetPasswordRules: string[] = [];
+  unmetPasswordRules = signal<string[]>([]);
+  unmetUserNameRules = signal<string[]>([]);
   passwordColor = '';
   passwordPercentage = 0;
 
-  constructor(private validation: ValidationService, private passwordValidation: PassValidation) {
+  constructor(
+    private validation: ValidationService,
+    private passwordValidation: PassValidation,
+    private userNameValidation: UserNameValidation
+  ) {
     this.actualType = this.type() || 'text';
   }
 
@@ -81,7 +86,7 @@ export class TextField {
     }
 
     // Error state (highest priority)
-    if (this.errorMessage() && this.hasValue) {
+    if (this.errorMessage()) {
       classes.push('text-red-500');
       return classes;
     }
@@ -90,8 +95,8 @@ export class TextField {
     // Removed the hasValue check from here since float() already implies hasValue when not focused
     if (
       !this.errorMessage() &&
-      this.type() === 'password' &&
-      this.unmetPasswordRules.length === 0 &&
+      ((this.type() === 'password' && this.unmetPasswordRules().length === 0) ||
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0)) &&
       shouldFloat &&
       this.hasValue
     ) {
@@ -139,9 +144,9 @@ export class TextField {
 
     // ALWAYS use ValidationService to validate
     if (this.type() === 'password') {
-      if(!val) {
-        this.isPasswordVisible= false;
-        this.actualType= 'password'
+      if (!val) {
+        this.isPasswordVisible = false;
+        this.actualType = 'password';
       }
       // Use PassValidation service for passwords
       const passwordResult: IPasswordValidation = this.passwordValidation.validatePassword(val);
@@ -150,10 +155,20 @@ export class TextField {
       this.passwordScore = passwordResult.extra.score;
       this.passwordColor = passwordResult.extra.color;
       this.passwordPercentage = passwordResult.extra.percentage;
-      this.unmetPasswordRules = passwordResult.helper;
+      this.unmetPasswordRules.set(passwordResult.helper);
+  
 
       // Set error message only if password is invalid and has value
       this.errorMessage.set('');
+    } else if (this.type() === 'username') {
+      const result = this.userNameValidation.validateUsername(val);
+      this.unmetUserNameRules.set(result.unmet);
+      if (result.valid) {
+        this.errorMessage.set('');
+      } else {
+        this.errorMessage.set(result.unmet[0]);
+      }
+      return;
     } else {
       // Use general ValidationService for other field types
       const v = this.validation.validateField(this.type(), val);
@@ -163,7 +178,8 @@ export class TextField {
       this.passwordScore = 0;
       this.passwordColor = '';
       this.passwordPercentage = 0;
-      this.unmetPasswordRules = [];
+      this.unmetPasswordRules.set([]);
+      this.unmetUserNameRules.set([])
     }
   }
 
@@ -177,9 +193,8 @@ export class TextField {
     this.blurred.emit();
   }
   togglePasswordVisibility(): void {
-    if(!this.value())
-      return
-    
+    if (!this.value()) return;
+
     if (this.type() === 'password') {
       this.isPasswordVisible = !this.isPasswordVisible;
       this.actualType = this.isPasswordVisible ? 'text' : 'password';
@@ -195,20 +210,20 @@ export class TextField {
     }
 
     if (this.type() === 'password' && this.hasValue) {
-      if (this.unmetPasswordRules.length === 0) {
+      if (this.unmetPasswordRules().length === 0) {
         return { type: 'password-strong', content: null };
       } else {
         return {
           type: 'password-helper',
           content: {
             helperText: this.helperText(),
-            rules: this.unmetPasswordRules,
+            rules: this.unmetPasswordRules(),
           },
         };
       }
     }
 
-    if (this.helperText() && this.type() !== 'password') {
+    if (this.helperText() && this.hasValue && this.type() !== 'password') {
       return { type: 'general-helper', content: this.helperText() };
     }
 

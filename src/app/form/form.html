@@ -35,6 +35,7 @@
         <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
             helperText="رمز باید حداقل 8 کاراکتر، شامل حرف بزرگ و گوچک، عدد و حداقل یک کاراکتر خاص باشد"
             [(value)]="password2"></app-text-field>
+            <app-text-field type="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"></app-text-field>
         <app-text-field label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true" [minrows]="2"
             [maxrows]="3" [(value)]="description2"></app-text-field>
         <app-select [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="بیمه"
