@@ -14,12 +14,15 @@
       </fieldset>
 
       <!-- Permanent label -->
-      <label *ngIf="label()"
+       @if (label()) {
+<label 
         class="absolute px-1 right-2 -top-[0.7rem] text-xs font-sans transition-colors pointer-events-none z-10"
         [class.text-red-500]="errorMessage()" [class.text-purple-600]="focused() || open()"
         [class.text-gray-600]="!errorMessage() && !focused() && !open()" style="background: transparent">
         {{ label() }}
       </label>
+       }
+      
 
       <!-- Button -->
       <button type="button" (click)="toggleOpen()" (focus)="focused.set(true)" (blur)="focused.set(false)"
@@ -37,11 +40,13 @@
       </button>
 
       <!-- Dropdown -->
-      <div *ngIf="open()"
+       @if (open()) {
+      <div 
         class="absolute z-10 mt-1 w-full right-0 overflow-auto rounded-md py-1 bg-[color:var(--input-bg)] shadow-lg border border-purple-600"
         role="listbox" aria-label="Select options">
         <!-- Search -->
-        <div *ngIf="searchable()" class="px-1 pb-1 top-0 font-sans bg-[color:var(--input-bg)]">
+         @if (searchable()) {
+        <div  class="px-1 pb-1 top-0 font-sans bg-[color:var(--input-bg)]">
           <div class="relative">
             <!-- Search Icon -->
             <svg class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none h-4 w-3"
@@ -56,14 +61,20 @@
               class="w-full border border-gray-300 rounded-md px-5 py-2 text-sm focus:ring-1/2 focus:border-purple-500 focus:outline-none focus:ring-purple-500 bg-[var(--input-bg)]" />
           </div>
         </div>
+         }
+
 
         <!-- Empty -->
-        <div *ngIf="filteredOptions().length === 0" class="px-3 py-2 text-gray-500 text-sm text-center font-sans">
+         @if (filteredOptions().length === 0) {
+ <div  class="px-3 py-2 text-gray-500 text-sm text-center font-sans">
           نتیجه‌ای یافت نشد
         </div>
+         }
+       
 
         <!-- Select all -->
-        <button *ngIf="multiple() && showSelectAll() && filteredOptions().length > 0" type="button"
+         @if (multiple() && showSelectAll() && filteredOptions().length > 0) {
+  <button type="button"
           (click)="handleSelectAll()"
           class="relative cursor-default select-none py-2 px-3 border-b border-gray-300 w-full text-[13px] text-right font-sans hover:text-purple-600 text-gray-900">
           <div class="flex items-center justify-between">
@@ -73,35 +84,47 @@
             <div class="flex items-center justify-center w-5 h-5 border-2 rounded mr-3"
               [class.bg-purple-600]="areAllSelected()" [class.border-purple-600]="areAllSelected()"
               [class.border-gray-300]="!areAllSelected()">
-              <svg *ngIf="areAllSelected()" class="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none"
+              @if (areAllSelected()) {
+ <svg  class="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor">
                 <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
+              }
+             
             </div>
           </div>
         </button>
 
+         }
+      
         <!-- Options -->
-        <ng-container *ngFor="let option of filteredOptions()">
-          <div (click)="toggleOption(option)" role="option" [attr.aria-selected]="isSelected(option)"
+         @for (option of filteredOptions(); track option) {
+         <div (click)="toggleOption(option)" role="option" [attr.aria-selected]="isSelected(option)"
             class="relative cursor-default select-none py-2 px-3 text-sm font-sans hover:text-purple-600 text-gray-700 flex items-center justify-between"
             [class.text-purple-600]="isSelected(option)">
             <span [class.font-medium]="isSelected(option)" class="block truncate">{{ option.label }}</span>
-
-            <div *ngIf="multiple()" class="flex items-center justify-center w-5 h-5 border-2 rounded"
+@if (multiple()) {
+ <div  class="flex items-center justify-center w-5 h-5 border-2 rounded"
               [class.bg-purple-600]="isSelected(option)" [class.border-purple-600]="isSelected(option)"
               [class.border-gray-300]="!isSelected(option)">
-              <svg *ngIf="isSelected(option)" class="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none"
+              @if (isSelected(option)) {
+<svg  class="h-3 w-3 text-white" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor">
                 <path d="M20 6L9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
+              }          
             </div>
+}
           </div>
-        </ng-container>
+         }
       </div>
+       }
     </div>
   </div>
 
   <!-- Error text -->
-  <p *ngIf="errorMessage()" class="text-red-500 text-sm mt-1">{{ errorMessage() }}</p>
+   @if (errorMessage()) {
+<p class="text-red-500 text-sm mt-1">{{ errorMessage() }}</p>
+   }
+  
 </div>
