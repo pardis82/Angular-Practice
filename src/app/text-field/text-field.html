@@ -5,7 +5,13 @@
         <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
   'border-red-400': !!errorMessage(),
   'border-green-400': (type() === 'password' && unmetPasswordRules().length === 0 && hasValue) || ( type()==='username' && unmetUserNameRules().length===0 &&hasValue ),
-  'border-purple-500': !errorMessage() && isFocused && !(type() === 'password' && unmetPasswordRules().length === 0 && hasValue),
+  'border-purple-500': !errorMessage() && 
+                     isFocused && 
+                     !hasValue || 
+                     (hasValue && (
+                       (type() === 'password' && unmetPasswordRules().length > 0) ||
+                       (type() === 'username' && unmetUserNameRules().length > 0)
+                     )),
   'border-gray-300': !errorMessage() && !isFocused
 }" aria-hidden="true">
 @if (label() && float) {
