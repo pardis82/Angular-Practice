@@ -21,7 +21,7 @@ export class FormComponent {
   lastName2 = '';
   password2 = '';
   email = '';
-  username=''
+  username = '';
   nationalCode = '';
   selectedCountries: SelectValue = [];
   countries: Option[] = [

@@ -35,14 +35,17 @@
                 [placeholder]="float() ? truncatedPlaceholder : ''" />
 
             <!-- PASSWORD TOGGLE & STRENGTH -->
-            @if (type() === 'password' && hasValue()) {
+            @if (type() === 'password' && hasValue() ) {
             <div class="mt-2">
 
+                @if(showValidationUI()){
                 <!-- Strength bar -->
                 <div class="w-full bg-gray-300 rounded h-1 mb-1  ">
                     <div class="h-full rounded transition-all duration-200  " [style.width.%]="passwordPercentage"
                         [class]="passwordColor"></div>
                 </div>
+                }
+
 
                 <!-- Toggle button -->
                 <button type="button" (click)="togglePasswordVisibility()"
@@ -90,6 +93,7 @@
 
     </div>
 
+    @if(showValidationUI()|| getDisplayMessage().type==='error') {
     <div class="mt-1 mr-1">
         @switch (getDisplayMessage().type) {
         <!-- ERROR -->
@@ -136,4 +140,6 @@
         }
 
     </div>
+    }
+
 </div>

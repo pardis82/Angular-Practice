@@ -29,6 +29,10 @@ export class TextField {
   id = input<string>();
   name = input<string>();
 
+  //---validation patterns---
+  validationMode = input<'auto' | 'none'>('auto');
+  showValidationUI = input<boolean>(true);
+
   // ----- SIGNAL OUTPUTS -----
   value = model<string>('');
   valueChange = output<string>();
@@ -48,12 +52,22 @@ export class TextField {
     return v !== undefined && v !== null ? v : this.defaultValue() || '';
   });
   hasValue = computed(() => !!this.actualValue() && this.actualValue().length > 0);
-  isPasswordValid= computed(()=> {
-    return this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()
-  })
-  isUsernameValid = computed(()=> {
-    return this.type()==='username' && this.unmetUserNameRules().length===0 && this.hasValue()
-  })
+  isPasswordValid = computed(() => {
+    return (
+      this.validationMode() === 'auto' &&
+      this.type() === 'password' &&
+      this.unmetPasswordRules().length === 0 &&
+      this.hasValue()
+    );
+  });
+  isUsernameValid = computed(() => {
+    return (
+      this.validationMode() === 'auto' &&
+      this.type() === 'username' &&
+      this.unmetUserNameRules().length === 0 &&
+      this.hasValue()
+    );
+  });
 
   // Password & Username UI state
   passwordScore = 0;
@@ -78,7 +92,6 @@ export class TextField {
   }
 
   // ----- GETTERS -----
- 
 
   get borderClasses() {
     if (this.errorMessage()) return 'border-red-400';
@@ -111,9 +124,9 @@ export class TextField {
     }
 
     // Success state for password when all rules are met
-    // Removed the hasValue check from here since float() already implies hasValue when not focused
     if (
       !this.errorMessage() &&
+      this.validationMode() === 'auto' &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0) ||
         (this.type() === 'username' && this.unmetUserNameRules().length === 0)) &&
       shouldFloat &&
@@ -149,27 +162,44 @@ export class TextField {
       this.isPasswordVisible.set(false);
       this.actualType = 'password';
     }
-    const result = this.passwordValidation.validatePassword(val);
-    this.passwordScore = result.extra.score;
-    this.passwordColor = result.extra.color;
-    this.passwordPercentage = result.extra.percentage;
-    this.unmetPasswordRules.set(result.helper);
-    this.errorMessage.set('');
+    if (this.validationMode() === 'auto') {
+      const result = this.passwordValidation.validatePassword(val);
+      this.passwordScore = result.extra.score;
+      this.passwordColor = result.extra.color;
+      this.passwordPercentage = result.extra.percentage;
+      this.unmetPasswordRules.set(result.helper);
+      this.errorMessage.set('');
+    } else {
+      this.errorMessage.set('');
+      this.passwordScore = 0;
+      this.passwordColor = '';
+      this.passwordPercentage = 0;
+      this.unmetPasswordRules.set([]);
+    }
   }
 
   private handleUsernameValidation(val: string) {
-    const result = this.userNameValidation.validateUsername(val);
-    this.unmetUserNameRules.set(result.unmet);
-    if (result.valid) {
-      this.errorMessage.set('');
+    if (this.validationMode() === 'auto') {
+      const result = this.userNameValidation.validateUsername(val);
+      this.unmetUserNameRules.set(result.unmet);
+      if (result.valid) {
+        this.errorMessage.set('');
+      } else {
+        this.errorMessage.set(result.unmet[0]);
+      }
     } else {
-      this.errorMessage.set(result.unmet[0]);
+      this.unmetUserNameRules.set([]);
+      this.errorMessage.set('');
     }
   }
 
   private handleGeneralValidation(val: string) {
-    const v = this.validation.validateField(this.type(), val);
-    this.errorMessage.set(v.error);
+    if (this.validationMode() === 'auto') {
+      const v = this.validation.validateField(this.type(), val);
+      this.errorMessage.set(v.error);
+    } else {
+      this.errorMessage.set('');
+    }
 
     // Clear password-specific properties for non-password fields
     this.passwordScore = 0;
@@ -223,7 +253,7 @@ export class TextField {
       return { type: 'error', content: this.errorMessage() };
     }
 
-    if (this.type() === 'password' && this.hasValue()) {
+    if (this.showValidationUI() && this.type() === 'password' && this.hasValue()) {
       if (this.unmetPasswordRules().length === 0) {
         return { type: 'password-strong', content: null };
       } else {

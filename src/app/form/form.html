@@ -1,5 +1,5 @@
 <h2 class="text-xl font-bold ml-5 mb-4">Angular Form Example</h2>
-<div dir="rtl" class="p-4 border rounded-lg mt-10 ">
+<!-- <div dir="rtl" class="p-4 border rounded-lg mt-10 ">
     <div class="grid lg:grid-cols-6 md:grid-cols-4 gap-4">
         <app-text-field label="نام" placeholder="نام خود را وارد کنید" helperText="نام باید حداقل 3 حرف باشد"
             [(value)]="firstName"></app-text-field>
@@ -51,17 +51,26 @@
             [value]="selectedLevel2" (valueChange)="selectedLevel2 = $event">
         </app-select>
     </div>
-</div>
+</div> -->
 
 <div dir="rtl" class="mt-20 p-4 flex justify-center">
     <div class="grid lg:grid-cols-1 md:grid-cols-3 sm:grid-cols-6 gap-3 w-64">
-        <app-text-field backgroundColor="#F1F3E0" type="username" label="نام کاربری" helperText=""></app-text-field>
+        <app-text-field backgroundColor="#F1F3E0" type="username" label="نام کاربری" helperText=""
+            [(value)]="username"></app-text-field>
         <app-text-field backgroundColor="#F1F3E0" type="password" label="رمز عبور"
             helperText="رمز عبور باید شامل 8 کاراکتر، حداقل یک حرف کوچک، یک حرف بزرگ ، یک عدد و یکی از کاراکتر های خاص باشد"></app-text-field>
     </div>
 </div>
 
-
+<div dir="rtl" class="mt-20 p-4 flex justify-center">
+    <div class="grid lg:grid-cols-1 md:grid-cols-3 sm:grid-cols-6 gap-3 w-64">
+        <app-text-field backgroundColor="#F1F3E0" [validationMode]="'none'" [showValidationUI]="false" type="username"
+            label="نام کاربری" helperText=""></app-text-field>
+        <app-text-field [validationMode]="'none'" [showValidationUI]="false" backgroundColor="#F1F3E0" type="password"
+            label="رمز عبور"
+            helperText="رمز عبور باید شامل 8 کاراکتر، حداقل یک حرف کوچک، یک حرف بزرگ ، یک عدد و یکی از کاراکتر های خاص باشد"></app-text-field>
+    </div>
+</div>
 
 
 
