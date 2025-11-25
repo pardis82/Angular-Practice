@@ -35,7 +35,7 @@
         <app-text-field type="password" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
             helperText="رمز باید حداقل 8 کاراکتر، شامل حرف بزرگ و گوچک، عدد و حداقل یک کاراکتر خاص باشد"
             [(value)]="password2"></app-text-field>
-            <app-text-field type="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"></app-text-field>
+        <app-text-field type="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"></app-text-field>
         <app-text-field label="توضیحات" placeholder="توضیحات خود را وارد کنید" [multiline]="true" [minrows]="2"
             [maxrows]="3" [(value)]="description2"></app-text-field>
         <app-select [options]="Insurance" [multiple]="true" [searchable]="true" [showSelectAll]="true" label="بیمه"
@@ -50,6 +50,14 @@
         <app-select [options]="Level2" [showSelectAll]="true" label="سطح" placeholder="سطح مورد نظر خود را انتخاب کنید"
             [value]="selectedLevel2" (valueChange)="selectedLevel2 = $event">
         </app-select>
+    </div>
+</div>
+
+<div dir="rtl" class="mt-20 p-4 flex justify-center">
+    <div class="grid lg:grid-cols-1 md:grid-cols-3 sm:grid-cols-6 gap-3 w-64">
+        <app-text-field backgroundColor="#F1F3E0" type="username" label="نام کاربری" helperText=""></app-text-field>
+        <app-text-field backgroundColor="#F1F3E0" type="password" label="رمز عبور"
+            helperText="رمز عبور باید شامل 8 کاراکتر، حداقل یک حرف کوچک، یک حرف بزرگ ، یک عدد و یکی از کاراکتر های خاص باشد"></app-text-field>
     </div>
 </div>
 

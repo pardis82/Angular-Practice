@@ -23,6 +23,7 @@ export class TextField {
   errorMessage = model<string>();
   containerClassName = input<string>();
   className = input<string>();
+  backgroundColor= input<string>(' #ffe2e2')
 
   minrows = input<number>(3);
   maxrows = input<number>(10);
