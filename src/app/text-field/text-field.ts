@@ -1,4 +1,4 @@
-import { Component, input, output, model, signal } from '@angular/core';
+import { Component, input, output, model, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ValidationService } from '../../services/validation/validation';
@@ -14,23 +14,18 @@ import { UserNameValidation } from '../../services/user-name-validation/user-nam
 export class TextField {
   // ----- SIGNAL INPUTS -----
   label = input<string>();
-
   type = input<string>('text'); // text, password, email, phone, nationalcode , username
   helperText = input<string>();
   errorMessage = model<string>();
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffe2e2');
-
   minrows = input<number>(3);
   maxrows = input<number>(10);
-
   colSpan = input<string>();
   multiline = input<boolean>(false);
-
   defaultValue = input<string>();
   placeholder = input<string>();
-
   id = input<string>();
   name = input<string>();
 
@@ -41,9 +36,11 @@ export class TextField {
   blurred = output<void>();
 
   // ----- INTERNAL STATE -----
-  isFocused = false;
+  isFocused = signal(false);
   isPasswordVisible = false;
   actualType = this.type();
+
+  float = computed(() => this.hasValue || this.isFocused());
 
   // Password UI state
   passwordScore = 0;
@@ -68,9 +65,9 @@ export class TextField {
   }
 
   // ----- GETTERS -----
-  get float(): boolean {
-    return this.hasValue || this.isFocused;
-  }
+  // get float(): boolean {
+  //   return this.hasValue || this.isFocused;
+  // }
   get isPasswordValid(): boolean {
     return this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue;
   }
@@ -84,17 +81,17 @@ export class TextField {
     if (this.isPasswordValid || this.isUsernameValid) return 'border-green-400';
     if (
       !this.errorMessage() &&
-      (this.isFocused || (this.hasValue && (this.isPasswordValid || this.isUsernameValid)))
+      (this.isFocused() || (this.hasValue && (this.isPasswordValid || this.isUsernameValid)))
     ) {
       return 'border-purple-500';
     }
-    if (!this.isFocused && !this.errorMessage()) return 'border-gray-300';
+    if (!this.isFocused() && !this.errorMessage()) return 'border-gray-300';
     return 'border-gray-300';
   }
 
   getLabelTextClasses() {
     const classes = [];
-    const shouldFloat = this.float; // Call once and reuse
+    const shouldFloat = this.float(); // Call once and reuse
 
     // Float positioning
     if (shouldFloat) {
@@ -205,12 +202,12 @@ export class TextField {
   }
 
   onFocus() {
-    this.isFocused = true;
+    this.isFocused.set(true);
     this.focused.emit();
   }
 
   onBlur() {
-    this.isFocused = false;
+    this.isFocused.set(false);
     this.blurred.emit();
   }
   togglePasswordVisibility(): void {

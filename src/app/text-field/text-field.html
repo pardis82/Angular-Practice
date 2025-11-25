@@ -4,7 +4,7 @@
         <!-- FIELDSET (border colors) -->
         <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors"
             [class]="borderClasses" aria-hidden="true">
-            @if (label() && float) {
+            @if (label() && float()) {
             <legend class="h-0 overflow-hidden transition-all duration-150 pl-2">
                 <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap" style="max-width: calc(100% - 8px)">
                     {{ label() }}
@@ -21,7 +21,7 @@
             [rows]="minrows() || 3"
             class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-none"
             [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
-            [placeholder]="float ? truncatedPlaceholder : ''"></textarea>
+            [placeholder]="float() ? truncatedPlaceholder : ''"></textarea>
         }
 
 
@@ -32,7 +32,7 @@
                 (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1"
                 [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
-                [placeholder]="float ? truncatedPlaceholder : ''" />
+                [placeholder]="float() ? truncatedPlaceholder : ''" />
 
             <!-- PASSWORD TOGGLE & STRENGTH -->
             @if (type() === 'password' && hasValue) {
