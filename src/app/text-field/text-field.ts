@@ -240,7 +240,7 @@ export class TextField {
     if (!this.value()) return;
 
     if (this.type() === 'password') {
-      this.isPasswordVisible.set(!this.isPasswordVisible);
+      this.isPasswordVisible.set(!this.isPasswordVisible());
       this.actualType = this.isPasswordVisible() ? 'text' : 'password';
     }
   }
