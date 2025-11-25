@@ -16,7 +16,7 @@
 
         <!-- MULTILINE TEXTAREA -->
         @if (multiline()) {
-        <textarea #textareaRef [id]="id()" [name]="name() || id()" [value]="actualValue"
+        <textarea #textareaRef [id]="id()" [name]="name() || id()" [value]="actualValue()"
             (input)="onInputChange($event); adjustTextareaHeight(textareaRef)" (focus)="onFocus()" (blur)="onBlur()"
             [rows]="minrows() || 3"
             class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-none"
@@ -28,14 +28,14 @@
         <!-- SINGLE LINE INPUT -->
         @if (!multiline()) {
         <div class="relative">
-            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="actualValue"
+            <input [type]="actualType" [id]="id()" [name]="name() || id()" [value]="actualValue()"
                 (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1"
                 [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
                 [placeholder]="float() ? truncatedPlaceholder : ''" />
 
             <!-- PASSWORD TOGGLE & STRENGTH -->
-            @if (type() === 'password' && hasValue) {
+            @if (type() === 'password' && hasValue()) {
             <div class="mt-2">
 
                 <!-- Strength bar -->

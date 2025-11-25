@@ -35,14 +35,27 @@ export class TextField {
   focused = output<void>();
   blurred = output<void>();
 
-  // ----- INTERNAL STATE -----
+  // ----- signals -----
   isFocused = signal(false);
-  isPasswordVisible = signal(false) ;
+  isPasswordVisible = signal(false);
   actualType = this.type();
 
-  float = computed(() => this.hasValue || this.isFocused());
+  //-----Computed signals------
 
-  // Password UI state
+  float = computed(() => this.hasValue() || this.isFocused());
+  actualValue = computed(() => {
+    const v = this.value();
+    return v !== undefined && v !== null ? v : this.defaultValue() || '';
+  });
+  hasValue = computed(() => !!this.actualValue() && this.actualValue().length > 0);
+  isPasswordValid= computed(()=> {
+    return this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()
+  })
+  isUsernameValid = computed(()=> {
+    return this.type()==='username' && this.unmetUserNameRules().length===0 && this.hasValue()
+  })
+
+  // Password & Username UI state
   passwordScore = 0;
   unmetPasswordRules = signal<string[]>([]);
   unmetUserNameRules = signal<string[]>([]);
@@ -60,28 +73,19 @@ export class TextField {
   ngOnChanges() {
     this.actualType = this.type() || 'text';
     if (this.type() !== 'password') {
-      this.isPasswordVisible.set(false) ;
+      this.isPasswordVisible.set(false);
     }
   }
 
   // ----- GETTERS -----
-  // get float(): boolean {
-  //   return this.hasValue || this.isFocused;
-  // }
-  get isPasswordValid(): boolean {
-    return this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue;
-  }
-
-  get isUsernameValid(): boolean {
-    return this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue;
-  }
+ 
 
   get borderClasses() {
     if (this.errorMessage()) return 'border-red-400';
-    if (this.isPasswordValid || this.isUsernameValid) return 'border-green-400';
+    if (this.isPasswordValid() || this.isUsernameValid()) return 'border-green-400';
     if (
       !this.errorMessage() &&
-      (this.isFocused() || (this.hasValue && (this.isPasswordValid || this.isUsernameValid)))
+      (this.isFocused() || (this.hasValue() && (this.isPasswordValid() || this.isUsernameValid())))
     ) {
       return 'border-purple-500';
     }
@@ -113,7 +117,7 @@ export class TextField {
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0) ||
         (this.type() === 'username' && this.unmetUserNameRules().length === 0)) &&
       shouldFloat &&
-      this.hasValue
+      this.hasValue()
     ) {
       classes.push('text-green-600');
       return classes;
@@ -125,14 +129,6 @@ export class TextField {
     }
 
     return classes;
-  }
-  get actualValue(): string {
-    const v = this.value();
-    return v !== undefined && v !== null ? v : this.defaultValue() || '';
-  }
-
-  get hasValue(): boolean {
-    return !!this.actualValue && this.actualValue.length > 0;
   }
 
   get truncatedPlaceholder(): string {
@@ -227,7 +223,7 @@ export class TextField {
       return { type: 'error', content: this.errorMessage() };
     }
 
-    if (this.type() === 'password' && this.hasValue) {
+    if (this.type() === 'password' && this.hasValue()) {
       if (this.unmetPasswordRules().length === 0) {
         return { type: 'password-strong', content: null };
       } else {
@@ -241,7 +237,7 @@ export class TextField {
       }
     }
 
-    if (this.helperText() && this.hasValue && this.type() !== 'password') {
+    if (this.helperText() && this.hasValue() && this.type() !== 'password') {
       return { type: 'general-helper', content: this.helperText() };
     }
 
