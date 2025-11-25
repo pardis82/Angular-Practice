@@ -2,18 +2,8 @@
     <div class="relative w-full rounded-lg px-3 py-3 " [style.background-color]="backgroundColor()">
 
         <!-- FIELDSET (border colors) -->
-        <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors" [ngClass]="{
-  'border-red-400': !!errorMessage(),
-  'border-green-400': (type() === 'password' && unmetPasswordRules().length === 0 && hasValue) || ( type()==='username' && unmetUserNameRules().length===0 &&hasValue ),
-  'border-purple-500': !errorMessage() && 
-                     isFocused && 
-                     !hasValue || 
-                     (hasValue && (
-                       (type() === 'password' && unmetPasswordRules().length > 0) ||
-                       (type() === 'username' && unmetUserNameRules().length > 0)
-                     )),
-  'border-gray-300': !errorMessage() && !isFocused
-}" aria-hidden="true">
+        <fieldset dir="rtl" class="absolute inset-0 pointer-events-none rounded-lg border transition-colors"
+            [class]="borderClasses" aria-hidden="true">
             @if (label() && float) {
             <legend class="h-0 overflow-hidden transition-all duration-150 pl-2">
                 <span class="text-xs opacity-0 px-1 inline-block whitespace-nowrap" style="max-width: calc(100% - 8px)">

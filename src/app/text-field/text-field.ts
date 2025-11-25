@@ -1,12 +1,9 @@
-import { Component, input, output, model , signal } from '@angular/core';
+import { Component, input, output, model, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ValidationService } from '../../services/validation/validation';
 import { PassValidation } from '../../services/pass-validation/pass-validation';
 import { UserNameValidation } from '../../services/user-name-validation/user-name-validation';
-import {
-  IPasswordValidation,
-} from '../../services/pass-validation/pass-validation';
 
 @Component({
   selector: 'app-text-field',
@@ -23,7 +20,7 @@ export class TextField {
   errorMessage = model<string>();
   containerClassName = input<string>();
   className = input<string>();
-  backgroundColor= input<string>(' #ffe2e2')
+  backgroundColor = input<string>(' #ffe2e2');
 
   minrows = input<number>(3);
   maxrows = input<number>(10);
@@ -73,6 +70,26 @@ export class TextField {
   // ----- GETTERS -----
   get float(): boolean {
     return this.hasValue || this.isFocused;
+  }
+  get isPasswordValid(): boolean {
+    return this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue;
+  }
+
+  get isUsernameValid(): boolean {
+    return this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue;
+  }
+
+  get borderClasses() {
+    if (this.errorMessage()) return 'border-red-400';
+    if (this.isPasswordValid || this.isUsernameValid) return 'border-green-400';
+    if (
+      !this.errorMessage() &&
+      (this.isFocused || (this.hasValue && (this.isPasswordValid || this.isUsernameValid)))
+    ) {
+      return 'border-purple-500';
+    }
+    if (!this.isFocused && !this.errorMessage()) return 'border-gray-300';
+    return 'border-gray-300';
   }
 
   getLabelTextClasses() {
@@ -134,6 +151,46 @@ export class TextField {
     return this.passwordValidation.getStrengthColor(this.passwordScore);
   }
 
+  private handlePassValidation(val: string) {
+    if (!val) {
+      this.isPasswordVisible = false;
+      this.actualType = 'password';
+    }
+    const result = this.passwordValidation.validatePassword(val);
+    this.passwordScore = result.extra.score;
+    this.passwordColor = result.extra.color;
+    this.passwordPercentage = result.extra.percentage;
+    this.unmetPasswordRules.set(result.helper);
+    this.errorMessage.set('');
+  }
+
+  private handleUsernameValidation(val: string) {
+    const result = this.userNameValidation.validateUsername(val);
+    this.unmetUserNameRules.set(result.unmet);
+    if (result.valid) {
+      this.errorMessage.set('');
+    } else {
+      this.errorMessage.set(result.unmet[0]);
+    }
+  }
+
+  private handleGeneralValidation(val: string) {
+    const v = this.validation.validateField(this.type(), val);
+    this.errorMessage.set(v.error);
+
+    // Clear password-specific properties for non-password fields
+    this.passwordScore = 0;
+    this.passwordColor = '';
+    this.passwordPercentage = 0;
+    this.unmetPasswordRules.set([]);
+    this.unmetUserNameRules.set([]);
+  }
+
+  private Validators: Record<string, (val: string) => void> = {
+    password: (val: string) => this.handlePassValidation(val),
+    username: (val: string) => this.handleUsernameValidation(val),
+    othertypes: (val: string) => this.handleGeneralValidation(val),
+  };
   // ----- MAIN INPUT HANDLER -----
   onInputChange(e: Event) {
     const inputEl = e.target as HTMLInputElement | HTMLTextAreaElement;
@@ -144,44 +201,7 @@ export class TextField {
     this.valueChange.emit(val);
 
     // ALWAYS use ValidationService to validate
-    if (this.type() === 'password') {
-      if (!val) {
-        this.isPasswordVisible = false;
-        this.actualType = 'password';
-      }
-      // Use PassValidation service for passwords
-      const passwordResult: IPasswordValidation = this.passwordValidation.validatePassword(val);
-
-      // Assign password-specific values
-      this.passwordScore = passwordResult.extra.score;
-      this.passwordColor = passwordResult.extra.color;
-      this.passwordPercentage = passwordResult.extra.percentage;
-      this.unmetPasswordRules.set(passwordResult.helper);
-  
-
-      // Set error message only if password is invalid and has value
-      this.errorMessage.set('');
-    } else if (this.type() === 'username') {
-      const result = this.userNameValidation.validateUsername(val);
-      this.unmetUserNameRules.set(result.unmet);
-      if (result.valid) {
-        this.errorMessage.set('');
-      } else {
-        this.errorMessage.set(result.unmet[0]);
-      }
-      return;
-    } else {
-      // Use general ValidationService for other field types
-      const v = this.validation.validateField(this.type(), val);
-      this.errorMessage.set(v.error);
-
-      // Clear password-specific properties for non-password fields
-      this.passwordScore = 0;
-      this.passwordColor = '';
-      this.passwordPercentage = 0;
-      this.unmetPasswordRules.set([]);
-      this.unmetUserNameRules.set([])
-    }
+    (this.Validators[this.type()] || this.Validators['default'])(val);
   }
 
   onFocus() {
