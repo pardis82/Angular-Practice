@@ -48,7 +48,7 @@
                 <button type="button" (click)="togglePasswordVisibility()"
                     class="absolute left-0 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors duration-200 p-1">
                     <!-- visible -->
-                    @if (isPasswordVisible) {
+                    @if (isPasswordVisible()) {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -62,7 +62,7 @@
 
 
                     <!-- hidden -->
-                    @if (!isPasswordVisible) {
+                    @if (!isPasswordVisible()) {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path

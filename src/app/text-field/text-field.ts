@@ -37,7 +37,7 @@ export class TextField {
 
   // ----- INTERNAL STATE -----
   isFocused = signal(false);
-  isPasswordVisible = false;
+  isPasswordVisible = signal(false) ;
   actualType = this.type();
 
   float = computed(() => this.hasValue || this.isFocused());
@@ -60,7 +60,7 @@ export class TextField {
   ngOnChanges() {
     this.actualType = this.type() || 'text';
     if (this.type() !== 'password') {
-      this.isPasswordVisible = false;
+      this.isPasswordVisible.set(false) ;
     }
   }
 
@@ -150,7 +150,7 @@ export class TextField {
 
   private handlePassValidation(val: string) {
     if (!val) {
-      this.isPasswordVisible = false;
+      this.isPasswordVisible.set(false);
       this.actualType = 'password';
     }
     const result = this.passwordValidation.validatePassword(val);
@@ -214,8 +214,8 @@ export class TextField {
     if (!this.value()) return;
 
     if (this.type() === 'password') {
-      this.isPasswordVisible = !this.isPasswordVisible;
-      this.actualType = this.isPasswordVisible ? 'text' : 'password';
+      this.isPasswordVisible.set(!this.isPasswordVisible);
+      this.actualType = this.isPasswordVisible() ? 'text' : 'password';
     }
   }
 
