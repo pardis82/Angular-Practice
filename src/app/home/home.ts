@@ -37,12 +37,7 @@ import { RouterLink } from '@angular/router';
         [routerLink]="'/loginform'"
         >Click to go to login form</a
       >
-      <a
-        class=" inline-block mx-20 text-blue-500 underline underline-offset-3"
-        [routerLink]="'/form'"
-      >
-        click to go to form
-      </a>
+
       <a
         class=" inline-block mx-20 text-blue-500 underline underline-offset-3"
         [routerLink]="'/signUpform'"
