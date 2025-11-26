@@ -1,9 +1,16 @@
 <div dir="rtl" class="mt-2 p-4 flex justify-center">
-    <div class="grid lg:grid-cols-1 gap-4 w-80">
-        <app-text-field label="نام کاربری" placeholder="نام کاربری خود را وارد کنید" backgroundColor="#F1F3E0"
-            type="username" [(value)]="username" [showValidationUI]="false"></app-text-field>
-        <app-text-field label="رمز عبور" placeholder="رمز عبور خود را وارد کنید" backgroundColor="#F1F3E0"
-            type="password" [(value)]="password" [showValidationUI]="false"></app-text-field>
+    <form (ngSubmit)="onSubmit()" class="grid lg:grid-cols-1 gap-4 w-80">
+        <app-text-field [showValidationUI]="false" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"
+            backgroundColor="#F1F3E0" type="username" [(value)]="username">
+        </app-text-field>
 
-    </div>
+        <app-text-field [showValidationUI]="false" label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            backgroundColor="#F1F3E0" type="password" [(value)]="password">
+        </app-text-field>
+
+        <button type="submit" [disabled]="!isFormValid()"
+            class="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70">
+            ورود به سیستم
+        </button>
+    </form>
 </div>

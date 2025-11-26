@@ -27,4 +27,18 @@ export class LoginForm {
   passwordPercentage = computed(() => this.passwordValidation().extra.percentage);
   passwordUnmetRules = computed(() => this.passwordValidation().helper);
   usernameUnmetRules = computed(() => this.usernameValidation().unmet);
+
+  isFormValid = computed(
+    () => this.username().trim().length > 0 && this.password().trim().length > 0
+  );
+
+  onSubmit(event:Event) {
+  event.preventDefault()
+    if (this.isFormValid()) {
+      console.log('login Successful', {
+        username: this.username(),
+        password: this.password(),
+      });
+    }
+  }
 }

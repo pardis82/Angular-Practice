@@ -40,6 +40,8 @@ export class TextField {
   valueChange = output<string>();
   focused = output<void>();
   blurred = output<void>();
+  valueDirty = output<string>(); // Emits when user types (marks as dirty)
+  valuePristine = output<string>(); // Emits value without marking dirty
 
   // ----- states -----
   isFocused = signal(false);
@@ -124,7 +126,7 @@ export class TextField {
   onInputChange(e: Event) {
     const inputEl = e.target as HTMLInputElement | HTMLTextAreaElement;
     let val = inputEl.value;
-
+    this.valueDirty.emit(val);
     // Send value upward
     this.value.set(val);
     this.valueChange.emit(val);
