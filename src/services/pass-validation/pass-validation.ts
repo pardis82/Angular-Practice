@@ -84,4 +84,17 @@ export class PassValidation {
       },
     };
   }
+
+  validateForSignUp(password: string): IPasswordValidation {
+    return this.validatePassword(password);
+  }
+
+  validateForLogin(password: string): boolean {
+    return !!password && password.trim().length > 0;
+  }
+
+  getPasswordstrength(password: string): { score: number; color: string; percentage: number } {
+    const result = this.validatePassword(password);
+    return result.extra;
+  }
 }

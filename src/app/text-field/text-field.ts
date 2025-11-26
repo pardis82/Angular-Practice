@@ -16,7 +16,7 @@ export class TextField {
   label = input<string>();
   type = input<string>('text'); // text, password, email, phone, nationalcode , username
   helperText = input<string>();
-  errorMessage = model<string>();
+  errorMessage = input<string>();
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffe2e2');
@@ -29,9 +29,14 @@ export class TextField {
   id = input<string>();
   name = input<string>();
 
-  //---validation patterns---
-  validationMode = input<'auto' | 'none'>('auto');
+  //---UI validation helpers---
+
   showValidationUI = input<boolean>(true);
+  passwordScore = input<number>(0);
+  unmetPasswordRules = input<string[]>([]);
+  unmetUserNameRules = input<string[]>([]);
+  passwordColor = input<string>('');
+  passwordPercentage = input<number>(0);
 
   // ----- SIGNAL OUTPUTS -----
   value = model<string>('');
@@ -39,181 +44,62 @@ export class TextField {
   focused = output<void>();
   blurred = output<void>();
 
-  // ----- signals -----
+  // ----- states -----
   isFocused = signal(false);
   isPasswordVisible = signal(false);
-  actualType = this.type();
 
   //-----Computed signals------
 
   float = computed(() => this.hasValue() || this.isFocused());
-  actualValue = computed(() => {
-    const v = this.value();
-    return v !== undefined && v !== null ? v : this.defaultValue() || '';
+  hasValue = computed(() => {
+    const v = this.value() ?? this.defaultValue() ?? '';
+    return v.length > 0;
   });
-  hasValue = computed(() => !!this.actualValue() && this.actualValue().length > 0);
-  isPasswordValid = computed(() => {
-    return (
-      this.validationMode() === 'auto' &&
-      this.type() === 'password' &&
-      this.unmetPasswordRules().length === 0 &&
-      this.hasValue()
-    );
-  });
-  isUsernameValid = computed(() => {
-    return (
-      this.validationMode() === 'auto' &&
-      this.type() === 'username' &&
-      this.unmetUserNameRules().length === 0 &&
-      this.hasValue()
-    );
-  });
-
-  // Password & Username UI state
-  passwordScore = 0;
-  unmetPasswordRules = signal<string[]>([]);
-  unmetUserNameRules = signal<string[]>([]);
-  passwordColor = '';
-  passwordPercentage = 0;
-
-  constructor(
-    private validation: ValidationService,
-    private passwordValidation: PassValidation,
-    private userNameValidation: UserNameValidation
-  ) {
-    this.actualType = this.type() || 'text';
-  }
-
-  ngOnChanges() {
-    this.actualType = this.type() || 'text';
-    if (this.type() !== 'password') {
-      this.isPasswordVisible.set(false);
+  actualType = computed(() => {
+    if (this.type() === 'password' && this.isPasswordVisible()) return 'text';
+    else {
+      return this.type() || 'text';
     }
-  }
+  });
 
-  // ----- GETTERS -----
+  // UI states
 
-  get borderClasses() {
+  borderClasses = computed(() => {
     if (this.errorMessage()) return 'border-red-400';
-    if (this.isPasswordValid() || this.isUsernameValid()) return 'border-green-400';
-    if (
-      !this.errorMessage() &&
-      (this.isFocused() || (this.hasValue() && (this.isPasswordValid() || this.isUsernameValid())))
-    ) {
+
+    if (!this.errorMessage() && (this.isFocused() || this.hasValue())) {
       return 'border-purple-500';
     }
-    if (!this.isFocused() && !this.errorMessage()) return 'border-gray-300';
     return 'border-gray-300';
-  }
+  });
 
-  getLabelTextClasses() {
-    const classes = [];
-    const shouldFloat = this.float(); // Call once and reuse
+  labelTextClasses = computed(() => {
+    {
+      const classes = [];
+      const shouldFloat = this.float(); // Call once and reuse
 
-    // Float positioning
-    if (shouldFloat) {
-      classes.push('text-xs -top-[0.7rem]');
-    } else {
-      classes.push('top-1/2 -translate-y-1/2 text-[11.5px]');
-    }
+      // Float positioning
+      classes.push(
+        shouldFloat ? 'text-xs -top-[0.7rem]' : 'top-1/2 -translate-y-1/2 text-[11.5px]'
+      );
 
-    // Error state (highest priority)
-    if (this.errorMessage()) {
-      classes.push('text-red-500');
+      // Error state (highest priority)
+      classes.push(this.errorMessage() ? 'text-red-500' : shouldFloat ? 'text-purple-600' : '');
+
+      // Default purple state - only apply if we haven't already returned
+      if (!this.errorMessage() && shouldFloat) {
+        classes.push('text-purple-600');
+      }
+
       return classes;
     }
-
-    // Success state for password when all rules are met
-    if (
-      !this.errorMessage() &&
-      this.validationMode() === 'auto' &&
-      ((this.type() === 'password' && this.unmetPasswordRules().length === 0) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0)) &&
-      shouldFloat &&
-      this.hasValue()
-    ) {
-      classes.push('text-green-600');
-      return classes;
-    }
-
-    // Default purple state - only apply if we haven't already returned
-    if (!this.errorMessage() && shouldFloat) {
-      classes.push('text-purple-600');
-    }
-
-    return classes;
-  }
+  });
 
   get truncatedPlaceholder(): string {
     const p = this.placeholder() || '';
     return p.length > 30 ? p.substring(0, 30) + '...' : p;
   }
 
-  get passwordStrengthPercent(): number {
-    return this.passwordValidation.getPassPrecentage(this.passwordScore);
-  }
-
-  get passwordStrengthColor(): string {
-    return this.passwordValidation.getStrengthColor(this.passwordScore);
-  }
-
-  private handlePassValidation(val: string) {
-    if (!val) {
-      this.isPasswordVisible.set(false);
-      this.actualType = 'password';
-    }
-    if (this.validationMode() === 'auto') {
-      const result = this.passwordValidation.validatePassword(val);
-      this.passwordScore = result.extra.score;
-      this.passwordColor = result.extra.color;
-      this.passwordPercentage = result.extra.percentage;
-      this.unmetPasswordRules.set(result.helper);
-      this.errorMessage.set('');
-    } else {
-      this.errorMessage.set('');
-      this.passwordScore = 0;
-      this.passwordColor = '';
-      this.passwordPercentage = 0;
-      this.unmetPasswordRules.set([]);
-    }
-  }
-
-  private handleUsernameValidation(val: string) {
-    if (this.validationMode() === 'auto') {
-      const result = this.userNameValidation.validateUsername(val);
-      this.unmetUserNameRules.set(result.unmet);
-      if (result.valid) {
-        this.errorMessage.set('');
-      } else {
-        this.errorMessage.set(result.unmet[0]);
-      }
-    } else {
-      this.unmetUserNameRules.set([]);
-      this.errorMessage.set('');
-    }
-  }
-
-  private handleGeneralValidation(val: string) {
-    if (this.validationMode() === 'auto') {
-      const v = this.validation.validateField(this.type(), val);
-      this.errorMessage.set(v.error);
-    } else {
-      this.errorMessage.set('');
-    }
-
-    // Clear password-specific properties for non-password fields
-    this.passwordScore = 0;
-    this.passwordColor = '';
-    this.passwordPercentage = 0;
-    this.unmetPasswordRules.set([]);
-    this.unmetUserNameRules.set([]);
-  }
-
-  private Validators: Record<string, (val: string) => void> = {
-    password: (val: string) => this.handlePassValidation(val),
-    username: (val: string) => this.handleUsernameValidation(val),
-    othertypes: (val: string) => this.handleGeneralValidation(val),
-  };
   // ----- MAIN INPUT HANDLER -----
   onInputChange(e: Event) {
     const inputEl = e.target as HTMLInputElement | HTMLTextAreaElement;
@@ -222,9 +108,6 @@ export class TextField {
     // Send value upward
     this.value.set(val);
     this.valueChange.emit(val);
-
-    // ALWAYS use ValidationService to validate
-    (this.Validators[this.type()] || this.Validators['default'])(val);
   }
 
   onFocus() {
@@ -241,7 +124,6 @@ export class TextField {
 
     if (this.type() === 'password') {
       this.isPasswordVisible.set(!this.isPasswordVisible());
-      this.actualType = this.isPasswordVisible() ? 'text' : 'password';
     }
   }
 
