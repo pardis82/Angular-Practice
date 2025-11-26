@@ -32,8 +32,7 @@ export class LoginForm {
     () => this.username().trim().length > 0 && this.password().trim().length > 0
   );
 
-  onSubmit(event:Event) {
-  event.preventDefault()
+  onSubmit() {
     if (this.isFormValid()) {
       console.log('login Successful', {
         username: this.username(),
