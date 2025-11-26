@@ -41,7 +41,8 @@
                 @if(showValidationUI()){
                 <!-- Strength bar -->
                 <div class="w-full bg-gray-300 rounded h-1 mb-1  ">
-                    <div class="h-full rounded transition-all duration-200  "></div>
+                    <div class="h-full rounded transition-all duration-200 " [class]="passwordColor()"
+                        [style.width.%]="passwordPercentage()"></div>
                 </div>
                 }
 

@@ -1,0 +1,15 @@
+<div dir="rtl" class="mt-2 p-4 flex justify-center">
+    <div class="grid lg:gird-cols-1 gap-4 w-64">
+        <app-text-field label="نام کاربری" placeholder="نام کاربری خود را وارد کنید" backgroundColor="#F1F3E0"
+            type="username"></app-text-field>
+        <app-text-field label="رمز عبور" placeholder="رمز عبور خود را وارد کنید" backgroundColor="#F1F3E0"
+            type="password" [(value)]="password" [showValidationUI]="true" [passwordScore]="passwordScore()"
+            [passwordColor]="passwordColor()" [passwordPercentage]="passwordPercentage()"
+            [unmetPasswordRules]="passwordUnmetRules()"></app-text-field>
+
+    </div>
+
+
+
+
+</div>

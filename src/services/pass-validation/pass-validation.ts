@@ -25,7 +25,7 @@ export interface IpasswordRequirements {
 @Injectable({
   providedIn: 'root',
 })
-export class PassValidation {
+export class PassValidationService {
   getPasswordRequirements(password: string): IpasswordRequirements {
     const requirements = {
       lowerCase: /[a-z]/.test(password),
@@ -83,14 +83,6 @@ export class PassValidation {
         percentage: this.getPassPrecentage(passwordAnalysis.score),
       },
     };
-  }
-
-  validateForSignUp(password: string): IPasswordValidation {
-    return this.validatePassword(password);
-  }
-
-  validateForLogin(password: string): boolean {
-    return !!password && password.trim().length > 0;
   }
 
   getPasswordstrength(password: string): { score: number; color: string; percentage: number } {

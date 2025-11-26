@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Home } from './home/home';
 import { Details } from './details/details';
 import { FormComponent } from './form/form';
+import { LoginForm } from './form/login-form/login-form';
 
 const routes: Routes = [
   {
@@ -16,9 +17,11 @@ const routes: Routes = [
   },
 
   {
-    path: 'form',
-    component: FormComponent,
-    title: 'Form practice',
+    path: 'loginform',
+    component: LoginForm,
+    title: 'Login Form practice',
   },
+
+  { path: 'form', component: FormComponent, title: 'Form Practice' },
 ];
 export default routes;

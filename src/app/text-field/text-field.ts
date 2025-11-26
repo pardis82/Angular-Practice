@@ -1,9 +1,6 @@
 import { Component, input, output, model, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ValidationService } from '../../services/validation/validation';
-import { PassValidation } from '../../services/pass-validation/pass-validation';
-import { UserNameValidation } from '../../services/user-name-validation/user-name-validation';
 
 @Component({
   selector: 'app-text-field',
