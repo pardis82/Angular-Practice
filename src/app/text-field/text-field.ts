@@ -1,4 +1,4 @@
-import { Component, input, output, model, signal, computed } from '@angular/core';
+import { Component, input, output, model, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -46,6 +46,13 @@ export class TextField {
   isPasswordVisible = signal(false);
 
   //-----Computed signals------
+  constructor() {
+    effect(() => {
+      if (this.type() === 'password' && !this.hasValue()) {
+        this.isPasswordVisible.set(false);
+      }
+    });
+  }
 
   float = computed(() => this.hasValue() || this.isFocused());
   hasValue = computed(() => {
@@ -133,8 +140,6 @@ export class TextField {
     this.blurred.emit();
   }
   togglePasswordVisibility(): void {
-    if (!this.value()) return;
-
     if (this.type() === 'password') {
       this.isPasswordVisible.set(!this.isPasswordVisible());
     }
