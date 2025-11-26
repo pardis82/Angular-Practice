@@ -4,11 +4,11 @@ import { PassValidationService } from '../../../services/pass-validation/pass-va
 import { UserNameValidationService } from '../../../services/user-name-validation/user-name-validation';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'app-sign-up-form',
   imports: [TextField],
-  templateUrl: './login-form.html',
+  templateUrl: './sign-up-form.html',
 })
-export class LoginForm {
+export class SignUpForm {
   password = signal('');
   username = signal('');
   constructor(

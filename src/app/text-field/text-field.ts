@@ -64,32 +64,48 @@ export class TextField {
   borderClasses = computed(() => {
     if (this.errorMessage()) return 'border-red-400';
 
-    if (!this.errorMessage() && (this.isFocused() || this.hasValue())) {
+    // Green border when validation passes
+    if (
+      this.showValidationUI() &&
+      ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()))
+    ) {
+      return 'border-green-400';
+    }
+
+    // Purple border when focused or has value
+    if (this.isFocused() || this.hasValue()) {
       return 'border-purple-500';
     }
+
     return 'border-gray-300';
   });
 
   labelTextClasses = computed(() => {
-    {
-      const classes = [];
-      const shouldFloat = this.float(); // Call once and reuse
+    const classes = [];
+    const shouldFloat = this.float();
 
-      // Float positioning
-      classes.push(
-        shouldFloat ? 'text-xs -top-[0.7rem]' : 'top-1/2 -translate-y-1/2 text-[11.5px]'
-      );
+    // Float positioning
+    classes.push(shouldFloat ? 'text-xs -top-[0.7rem]' : 'top-1/2 -translate-y-1/2 text-[11.5px]');
 
-      // Error state (highest priority)
-      classes.push(this.errorMessage() ? 'text-red-500' : shouldFloat ? 'text-purple-600' : '');
-
-      // Default purple state - only apply if we haven't already returned
-      if (!this.errorMessage() && shouldFloat) {
-        classes.push('text-purple-600');
-      }
-
-      return classes;
+    // Priority 1: Error state (red)
+    if (this.errorMessage()) {
+      classes.push('text-red-500');
     }
+    // Priority 2: Success state (green) - when validation passes
+    else if (
+      this.showValidationUI() &&
+      ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()))
+    ) {
+      classes.push('text-green-600');
+    }
+    // Priority 3: Focused/has value state (purple)
+    else if (shouldFloat) {
+      classes.push('text-purple-600');
+    }
+
+    return classes;
   });
 
   get truncatedPlaceholder(): string {
@@ -146,7 +162,16 @@ export class TextField {
       }
     }
 
-    if (this.helperText() && this.hasValue() && this.type() !== 'password') {
+    if (this.showValidationUI() && this.type() === 'username' && this.hasValue()) {
+      if (this.unmetUserNameRules().length > 0) {
+        return {
+          type: 'general-helper',
+          content: this.unmetUserNameRules()[0],
+        };
+      }
+    }
+
+    if (this.helperText() && this.hasValue()) {
       return { type: 'general-helper', content: this.helperText() };
     }
 

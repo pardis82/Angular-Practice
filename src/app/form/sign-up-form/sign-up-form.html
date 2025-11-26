@@ -1,0 +1,13 @@
+<div dir="rtl" class="mt-2 p-4 flex justify-center">
+    <div class="grid lg:grid-cols-1 gap-4 w-80">
+        <app-text-field label="نام کاربری" placeholder="نام کاربری خود را وارد کنید" backgroundColor="#F1F3E0"
+            type="username" [errorMessage]="usernameError()" [(value)]="username" [showValidationUI]="true"
+            [unmetUserNameRules]="usernameUnmetRules()" helperText=""></app-text-field>
+        <app-text-field label="رمز عبور" placeholder="رمز عبور خود را وارد کنید"
+            helperText="رمز عبور باید حداقل 8 کاراکتر و شامل یک حرف بزرگ ، یک حرف کوچک ، یک عدد  و یک کاراکتر خاص (@ $ & ! # ? %)"
+            backgroundColor="#F1F3E0" type="password" [(value)]="password" [showValidationUI]="true"
+            [passwordScore]="passwordScore()" [passwordColor]="passwordColor()"
+            [passwordPercentage]="passwordPercentage()" [unmetPasswordRules]="passwordUnmetRules()"></app-text-field>
+
+    </div>
+</div>

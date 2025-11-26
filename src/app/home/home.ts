@@ -43,6 +43,11 @@ import { RouterLink } from '@angular/router';
       >
         click to go to form
       </a>
+      <a
+        class=" inline-block mx-20 text-blue-500 underline underline-offset-3"
+        [routerLink]="'/signUpform'"
+        >Click to go to sign up</a
+      >
     </section> `,
 })
 export class Home {

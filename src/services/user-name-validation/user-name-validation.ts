@@ -7,7 +7,7 @@ export interface IusernameValidation{
 @Injectable({
   providedIn: 'root',
 })
-export class UserNameValidation {
+export class UserNameValidationService {
   validateUsername(userName:string): IusernameValidation {
     const unmet :string[] = []
    const trimmed = userName.trim();

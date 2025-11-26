@@ -84,9 +84,4 @@ export class PassValidationService {
       },
     };
   }
-
-  getPasswordstrength(password: string): { score: number; color: string; percentage: number } {
-    const result = this.validatePassword(password);
-    return result.extra;
-  }
 }

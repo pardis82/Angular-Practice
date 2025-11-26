@@ -3,6 +3,7 @@ import { Home } from './home/home';
 import { Details } from './details/details';
 import { FormComponent } from './form/form';
 import { LoginForm } from './form/login-form/login-form';
+import { SignUpForm } from './form/sign-up-form/sign-up-form';
 
 const routes: Routes = [
   {
@@ -20,6 +21,11 @@ const routes: Routes = [
     path: 'loginform',
     component: LoginForm,
     title: 'Login Form practice',
+  },
+
+  {path: 'signUpform',
+    component: SignUpForm,
+    title: 'Sign Up practice'
   },
 
   { path: 'form', component: FormComponent, title: 'Form Practice' },
