@@ -17,10 +17,6 @@ export class SignUpForm {
   ) {}
   passwordValidation = computed(() => this.passvalidation.validatePassword(this.password()));
   usernameValidation = computed(() => this.usernvalidation.validateUsername(this.username()));
-  // passwordError = computed(() => (this.passwordValidation().valid ? '' : 'invalid'));
-  usernameError = computed(() =>
-    this.usernameValidation().valid ? '' : this.usernameValidation().unmet[0]
-  );
 
   passwordScore = computed(() => this.passwordValidation().extra.score);
   passwordColor = computed(() => this.passwordValidation().extra.color);
