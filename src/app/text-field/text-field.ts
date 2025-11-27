@@ -9,6 +9,13 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
 })
 export class TextField {
+  constructor() {
+    effect(() => {
+      if (this.type() === 'password' && !this.hasValue()) {
+        this.isPasswordVisible.set(false);
+      }
+    });
+  }
   // ----- SIGNAL INPUTS -----
   label = input<string>();
   type = input<string>('text'); // text, password, email, phone, nationalcode , username
@@ -48,13 +55,6 @@ export class TextField {
   isPasswordVisible = signal(false);
 
   //-----Computed signals------
-  constructor() {
-    effect(() => {
-      if (this.type() === 'password' && !this.hasValue()) {
-        this.isPasswordVisible.set(false);
-      }
-    });
-  }
 
   float = computed(() => this.hasValue() || this.isFocused());
   hasValue = computed(() => {
