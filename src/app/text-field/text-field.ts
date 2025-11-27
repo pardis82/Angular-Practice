@@ -1,14 +1,30 @@
-import { Component, input, output, model, signal, computed, effect } from '@angular/core';
+import {
+  Component,
+  input,
+  output,
+  model,
+  signal,
+  computed,
+  effect,
+  forwardRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-text-field',
   standalone: true,
   templateUrl: './text-field.html',
   imports: [CommonModule, FormsModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TextField),
+      multi: true,
+    },
+  ],
 })
-export class TextField {
+export class TextField implements ControlValueAccessor {
   constructor() {
     effect(() => {
       if (this.type() === 'password' && !this.hasValue()) {
@@ -16,9 +32,10 @@ export class TextField {
       }
     });
   }
+
   // ----- SIGNAL INPUTS -----
   label = input<string>();
-  type = input<string>('text'); // text, password, email, phone, nationalcode , username
+  type = input<string>('text');
   helperText = input<string>();
   errorMessage = input<string>();
   containerClassName = input<string>();
@@ -34,7 +51,6 @@ export class TextField {
   name = input<string>();
 
   //---UI validation helpers---
-
   showValidationUI = input<boolean>(true);
   passwordScore = input<number>(0);
   unmetPasswordRules = input<string[]>([]);
@@ -47,15 +63,19 @@ export class TextField {
   valueChange = output<string>();
   focused = output<void>();
   blurred = output<void>();
-  valueDirty = output<string>(); // Emits when user types (marks as dirty)
-  valuePristine = output<string>(); // Emits value without marking dirty
+  valueDirty = output<string>();
+  valuePristine = output<string>();
 
   // ----- states -----
   isFocused = signal(false);
   isPasswordVisible = signal(false);
 
-  //-----Computed signals------
+  // ----- ControlValueAccessor Properties -----
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
+  private isDisabled = false;
 
+  //-----Computed signals------
   float = computed(() => this.hasValue() || this.isFocused());
   hasValue = computed(() => {
     const v = this.value() ?? this.defaultValue() ?? '';
@@ -68,12 +88,10 @@ export class TextField {
     }
   });
 
-  // UI states
-
+  // UI states (keep all your existing computed signals)
   borderClasses = computed(() => {
     if (this.errorMessage()) return 'border-red-400';
 
-    // Green border when validation passes
     if (
       this.showValidationUI() &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
@@ -82,7 +100,6 @@ export class TextField {
       return 'border-green-400';
     }
 
-    // Purple border when focused or has value
     if (this.isFocused() || this.hasValue()) {
       return 'border-purple-500';
     }
@@ -94,23 +111,17 @@ export class TextField {
     const classes = [];
     const shouldFloat = this.float();
 
-    // Float positioning
     classes.push(shouldFloat ? 'text-xs -top-[0.7rem]' : 'top-1/2 -translate-y-1/2 text-[11.5px]');
 
-    // Priority 1: Error state (red)
     if (this.errorMessage()) {
       classes.push('text-red-500');
-    }
-    // Priority 2: Success state (green) - when validation passes
-    else if (
+    } else if (
       this.showValidationUI() &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
         (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()))
     ) {
       classes.push('text-green-600');
-    }
-    // Priority 3: Focused/has value state (purple)
-    else if (shouldFloat) {
+    } else if (shouldFloat) {
       classes.push('text-purple-600');
     }
 
@@ -122,14 +133,36 @@ export class TextField {
     return p.length > 30 ? p.substring(0, 30) + '...' : p;
   }
 
-  // ----- MAIN INPUT HANDLER -----
+  // ----- CONTROL VALUE ACCESSOR METHODS -----
+  writeValue(value: string): void {
+    this.value.set(value || '');
+  }
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+    // You can add disabled state handling to your template if needed
+  }
+
+  // ----- MAIN INPUT HANDLER (updated) -----
   onInputChange(e: Event) {
     const inputEl = e.target as HTMLInputElement | HTMLTextAreaElement;
     let val = inputEl.value;
-    this.valueDirty.emit(val);
-    // Send value upward
+
+    // Update local state
     this.value.set(val);
     this.valueChange.emit(val);
+    this.valueDirty.emit(val);
+
+    // Notify form control
+    this.onChange(val);
   }
 
   onFocus() {
@@ -139,8 +172,10 @@ export class TextField {
 
   onBlur() {
     this.isFocused.set(false);
+    this.onTouched(); // Mark as touched for form control
     this.blurred.emit();
   }
+
   togglePasswordVisibility(): void {
     if (this.type() === 'password') {
       this.isPasswordVisible.set(!this.isPasswordVisible());
@@ -157,6 +192,7 @@ export class TextField {
       | 'none';
     content: any;
   } {
+    // Keep all your existing logic exactly the same
     if (this.errorMessage()) {
       return { type: 'error', content: this.errorMessage() };
     }
