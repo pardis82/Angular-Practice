@@ -148,7 +148,13 @@ export class TextField {
   }
 
   getDisplayMessage(): {
-    type: 'error' | 'password-strong' | 'password-helper' | 'general-helper' | 'none';
+    type:
+      | 'error'
+      | 'password-strong'
+      | 'password-helper'
+      | 'username-helper'
+      | 'general-helper'
+      | 'none';
     content: any;
   } {
     if (this.errorMessage()) {
@@ -172,7 +178,7 @@ export class TextField {
     if (this.showValidationUI() && this.type() === 'username' && this.hasValue()) {
       if (this.unmetUserNameRules().length > 0) {
         return {
-          type: 'general-helper',
+          type: 'username-helper',
           content: this.unmetUserNameRules()[0],
         };
       }

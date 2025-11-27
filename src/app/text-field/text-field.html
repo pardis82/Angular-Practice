@@ -132,6 +132,12 @@
 
         </div>
         }
+
+        @case ('username-helper') {
+        <p class="text-gray-500 font-sans text-[12.5px]">
+            {{getDisplayMessage().content}}
+        </p>
+        }
         <!-- GENERAL HELPER -->
         @case ('general-helper') {
         <p class="text-gray-500 font-sans text-[12.5px]">
