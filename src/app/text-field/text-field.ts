@@ -127,7 +127,10 @@ export class TextField implements ControlValueAccessor {
     } else if (
       this.showValidationUI() &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) || (this.type()==='nationalcode' && this.unmetNationalCodeRules().length===0 && this.hasValue()) )
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) ||
+        (this.type() === 'nationalcode' &&
+          this.unmetNationalCodeRules().length === 0 &&
+          this.hasValue()))
     ) {
       classes.push('text-green-600');
     } else if (shouldFloat) {
@@ -191,6 +194,7 @@ export class TextField implements ControlValueAccessor {
       | 'password-strong'
       | 'password-helper'
       | 'username-helper'
+      | 'nationalcode-helper' // Add this
       | 'general-helper'
       | 'none';
     content: any;
@@ -218,6 +222,16 @@ export class TextField implements ControlValueAccessor {
         return {
           type: 'username-helper',
           content: this.unmetUserNameRules()[0],
+        };
+      }
+    }
+
+    // ADD THIS SECTION FOR NATIONAL CODE
+    if (this.showValidationUI() && this.type() === 'nationalcode' && this.hasValue()) {
+      if (this.unmetNationalCodeRules().length > 0) {
+        return {
+          type: 'nationalcode-helper',
+          content: this.unmetNationalCodeRules()[0], // Show first error
         };
       }
     }

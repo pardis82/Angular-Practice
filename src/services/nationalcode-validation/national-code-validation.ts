@@ -19,7 +19,7 @@ export class NationalCodeValidation {
     const nationalCode = digitReplacer;
 
     if (parseInt(nationalCode, 10) === 0) unmet.push('کد ملی نمیتواند تمام صفر باشد');
-    if (parseInt(nationalCode.substring(2, 9), 10) === 0) unmet.push('کد ملی نامعتبر است');
+    if (parseInt(nationalCode.substring(3, 9), 10) === 0) unmet.push('کد ملی نامعتبر است');
 
     const controlDigit = parseInt(nationalCode.charAt(9), 10);
     let sum = 0;
