@@ -11,32 +11,65 @@ export interface InationalCodeRequirements {
 export class NationalCodeValidation {
   validateNationalCode(code: string): InationalCodeRequirements {
     const unmet: string[] = [];
-    const digitReplacer = code.replace(/\D/g, '');
 
-    if (!code || code.trim().length == 0) unmet.push('کد ملی الزامی است');
-    if (digitReplacer.length !== 10) unmet.push('کد ملی باید 10 رقم باشد');
+    // Convert Persian/Arabic digits to English
+    const englishCode = this.convertToEnglishDigits(code);
 
-    const nationalCode = digitReplacer;
+    // Remove any non-digit characters
+    const cleanCode = englishCode.replace(/\D/g, '');
 
-    if (parseInt(nationalCode, 10) === 0) unmet.push('کد ملی نمیتواند تمام صفر باشد');
-    if (parseInt(nationalCode.substring(3, 9), 10) === 0) unmet.push('کد ملی نامعتبر است');
+    // Check if we have exactly 10 digits
+    if (cleanCode.length !== 10) {
+      unmet.push('کد ملی باید ۱۰ رقم باشد');
+      return { isValid: false, unmet };
+    }
 
-    const controlDigit = parseInt(nationalCode.charAt(9), 10);
+    // Check if all digits are the same (like 0000000000, 1111111111, etc.)
+    if (/^(\d)\1+$/.test(cleanCode)) {
+      unmet.push('کد ملی نامعتبر است');
+      return { isValid: false, unmet };
+    }
+
+    // Checksum validation
+    const controlDigit = parseInt(cleanCode.charAt(9), 10);
     let sum = 0;
 
     for (let i = 0; i < 9; i++) {
-      const codeDigits = parseInt(nationalCode.charAt(i), 10);
-      sum += codeDigits * (10 - i);
+      const digit = parseInt(cleanCode.charAt(i), 10);
+      sum += digit * (10 - i);
     }
+
     const remainder = sum % 11;
-    const isValid =
+    const isValidChecksum =
       (remainder < 2 && controlDigit === remainder) ||
       (remainder >= 2 && controlDigit === 11 - remainder);
-    if (!isValid) unmet.push('کد ملی نامعتبر است');
+
+    if (!isValidChecksum) {
+      unmet.push('کد ملی معتبر نیست');
+    }
 
     return {
       isValid: unmet.length === 0,
       unmet,
     };
+  }
+
+  private convertToEnglishDigits(text: string): string {
+    const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+
+    let result = text;
+
+    // Convert Persian digits
+    persianDigits.forEach((digit, index) => {
+      result = result.replace(new RegExp(digit, 'g'), index.toString());
+    });
+
+    // Convert Arabic digits
+    arabicDigits.forEach((digit, index) => {
+      result = result.replace(new RegExp(digit, 'g'), index.toString());
+    });
+
+    return result;
   }
 }

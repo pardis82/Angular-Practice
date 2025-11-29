@@ -18,7 +18,6 @@ export class SignUpForm implements OnInit {
   formValues = signal({
     username: '',
     password: '',
-    nationalcode: '',
   });
 
   constructor(
@@ -40,7 +39,6 @@ export class SignUpForm implements OnInit {
       this.formValues.set({
         username: values.username || '',
         password: values.password || '',
-        nationalcode: values.nationalcode || '',
       });
     });
   }
@@ -54,14 +52,15 @@ export class SignUpForm implements OnInit {
     this.usernvalidation.validateUsername(this.formValues().username)
   );
 
-  nationalcvalidation = computed(() =>
-    this.nationalcodevalidation.validateNationalCode(this.formValues().nationalcode)
+  nationalCodeValidation = computed(() =>
+    this.nationalcodevalidation.validateNationalCode(
+      this.signUpForm.get('nationalCode')?.value || ''
+    )
   );
-
   passwordScore = computed(() => this.passwordValidation().extra.score);
   passwordColor = computed(() => this.passwordValidation().extra.color);
   passwordPercentage = computed(() => this.passwordValidation().extra.percentage);
   passwordUnmetRules = computed(() => this.passwordValidation().helper);
   usernameUnmetRules = computed(() => this.usernameValidation().unmet);
-  nationalUnmetRules = computed(() => this.nationalcvalidation().unmet);
+  nationalUnmetRules = computed(() => this.nationalCodeValidation().unmet);
 }
