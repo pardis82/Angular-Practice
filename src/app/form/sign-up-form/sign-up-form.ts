@@ -18,6 +18,7 @@ export class SignUpForm implements OnInit {
   formValues = signal({
     username: '',
     password: '',
+    nationalcode: '',
   });
 
   constructor(
@@ -39,6 +40,7 @@ export class SignUpForm implements OnInit {
       this.formValues.set({
         username: values.username || '',
         password: values.password || '',
+        nationalcode: values.nationalcode || '',
       });
     });
   }
@@ -54,7 +56,7 @@ export class SignUpForm implements OnInit {
 
   nationalCodeValidation = computed(() =>
     this.nationalcodevalidation.validateNationalCode(
-      this.signUpForm.get('nationalCode')?.value || ''
+      this.formValues().nationalcode
     )
   );
   passwordScore = computed(() => this.passwordValidation().extra.score);
