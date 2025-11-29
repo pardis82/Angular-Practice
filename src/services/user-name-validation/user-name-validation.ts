@@ -13,7 +13,7 @@ export class UserNameValidationService {
     const trimmed = userName.trim();
 
     if (trimmed.trim().length === 0) {
-      return { valid: true, unmet: [] };
+      return { valid: false, unmet: [] };
     }
 
     if (trimmed.length < 4 || trimmed.length > 20) {

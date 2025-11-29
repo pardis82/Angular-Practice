@@ -21,7 +21,7 @@
             [rows]="minrows() || 3"
             class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right resize-none"
             [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
-            [placeholder]="float() ? truncatedPlaceholder : ''"></textarea>
+            [placeholder]="float() ? truncatedPlaceholder() : ''"></textarea>
         }
 
 
@@ -32,7 +32,7 @@
                 (input)="onInputChange($event)" (focus)="onFocus()" (blur)="onBlur()"
                 class="w-full bg-transparent outline-none text-xs leading-normal font-sans text-right pr-1"
                 [ngClass]="[className() || '', errorMessage() ? 'text-red-600' : '']"
-                [placeholder]="float() ? truncatedPlaceholder : ''" />
+                [placeholder]="float() ? truncatedPlaceholder() : ''" />
 
             <!-- PASSWORD TOGGLE & STRENGTH -->
             @if (type() === 'password' && hasValue() ) {

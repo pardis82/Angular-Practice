@@ -88,7 +88,12 @@ export class TextField implements ControlValueAccessor {
     }
   });
 
-  // UI states (keep all your existing computed signals)
+  truncatedPlaceholder = computed(() => {
+    const p = this.placeholder() || '';
+    return p.length > 30 ? p.substring(0, 30) + '...' : p;
+  });
+
+  // UI states
   borderClasses = computed(() => {
     if (this.errorMessage()) return 'border-red-400';
 
@@ -128,11 +133,6 @@ export class TextField implements ControlValueAccessor {
     return classes;
   });
 
-  get truncatedPlaceholder(): string {
-    const p = this.placeholder() || '';
-    return p.length > 30 ? p.substring(0, 30) + '...' : p;
-  }
-
   // ----- CONTROL VALUE ACCESSOR METHODS -----
   writeValue(value: string): void {
     this.value.set(value || '');
@@ -148,7 +148,6 @@ export class TextField implements ControlValueAccessor {
 
   setDisabledState?(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
-    // You can add disabled state handling to your template if needed
   }
 
   // ----- MAIN INPUT HANDLER (updated) -----
@@ -192,7 +191,6 @@ export class TextField implements ControlValueAccessor {
       | 'none';
     content: any;
   } {
-    // Keep all your existing logic exactly the same
     if (this.errorMessage()) {
       return { type: 'error', content: this.errorMessage() };
     }

@@ -11,6 +11,7 @@ import { UserNameValidationService } from '../../../services/user-name-validatio
 })
 export class SignUpForm implements OnInit {
   signUpForm!: FormGroup;
+  formValid = signal(false);
 
   // Create signals for form values to trigger computed updates
   formValues = signal({
