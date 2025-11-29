@@ -11,10 +11,28 @@ export interface InationalCodeRequirements {
 export class NationalCodeValidation {
   validateNationalCode(code: string): InationalCodeRequirements {
     const unmet: string[] = [];
-    const length = code.length;
+    const digitReplacer = code.replace(/\D/g, '');
 
     if (!code || code.trim().length == 0) unmet.push('کد ملی الزامی است');
-    if (length !== 10) unmet.push('کد ملی باید 10 رقم باشد');
+    if (digitReplacer.length !== 10) unmet.push('کد ملی باید 10 رقم باشد');
+
+    const nationalCode = digitReplacer;
+
+    if (parseInt(nationalCode, 10) === 0) unmet.push('کد ملی نمیتواند تمام صفر باشد');
+    if (parseInt(nationalCode.substring(2, 9), 10) === 0) unmet.push('کد ملی نامعتبر است');
+
+    const controlDigit = parseInt(nationalCode.charAt(9), 10);
+    let sum = 0;
+
+    for (let i = 0; i < 9; i++) {
+      const codeDigits = parseInt(nationalCode.charAt(i), 10);
+      sum += codeDigits * (10 - i);
+    }
+    const remainder = sum % 11;
+    const isValid =
+      (remainder < 2 && controlDigit === remainder) ||
+      (remainder >= 2 && controlDigit === 11 - remainder);
+    if (!isValid) unmet.push('کد ملی نامعتبر است');
 
     return {
       isValid: unmet.length === 0,

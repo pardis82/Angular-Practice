@@ -13,5 +13,9 @@
             [unmetPasswordRules]="passwordUnmetRules()"
             [errorMessage]="signUpForm.get('password')?.touched && signUpForm.get('password')?.errors?.['required'] ? 'نام کاربری الزامی است' : '' ">
         </app-text-field>
+
+        <app-text-field formControlName="nationalcode" label="کد ملی" placeholder="مثلا: 0250121311" type="nationalcode"
+            backgroundColor="#F1F3E0" [showValidationUI]="true"
+            [unmetNationalCodeRules]="nationalUnmetRules()"></app-text-field>
     </form>
 </div>

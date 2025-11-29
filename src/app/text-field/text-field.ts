@@ -55,6 +55,7 @@ export class TextField implements ControlValueAccessor {
   passwordScore = input<number>(0);
   unmetPasswordRules = input<string[]>([]);
   unmetUserNameRules = input<string[]>([]);
+  unmetNationalCodeRules = input<string[]>([]);
   passwordColor = input<string>('');
   passwordPercentage = input<number>(0);
 
@@ -100,7 +101,10 @@ export class TextField implements ControlValueAccessor {
     if (
       this.showValidationUI() &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()))
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) ||
+        (this.type() === 'nationalcode' &&
+          this.unmetNationalCodeRules().length === 0 &&
+          this.hasValue()))
     ) {
       return 'border-green-400';
     }
@@ -123,7 +127,7 @@ export class TextField implements ControlValueAccessor {
     } else if (
       this.showValidationUI() &&
       ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()))
+        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) || (this.type()==='nationalcode' && this.unmetNationalCodeRules().length===0 && this.hasValue()) )
     ) {
       classes.push('text-green-600');
     } else if (shouldFloat) {
