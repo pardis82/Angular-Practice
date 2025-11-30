@@ -1,0 +1,5 @@
+
+@for (control of verificationValues(); track control ; let i = $index) {
+<input class="bg-red-500" #codeInput [formControl]="control" type="text" maxlength="maxLength"
+    (input)="onInput($event , i)" (keydown)="onKeyDown($event , i)">
+}

@@ -5,10 +5,11 @@ import { PassValidationService } from '../../../services/pass-validation/pass-va
 import { UserNameValidationService } from '../../../services/user-name-validation/user-name-validation';
 import { NationalCodeValidation } from '../../../services/nationalcode-validation/national-code-validation';
 import { PhoneNumberValidation } from '../../../services/phonenumber-validation/phone-number-validation';
+import { VerificationCode } from '../../verification-code/verification-code';
 
 @Component({
   selector: 'app-sign-up-form',
-  imports: [TextField, ReactiveFormsModule],
+  imports: [TextField, ReactiveFormsModule, VerificationCode],
   templateUrl: './sign-up-form.html',
 })
 export class SignUpForm implements OnInit {

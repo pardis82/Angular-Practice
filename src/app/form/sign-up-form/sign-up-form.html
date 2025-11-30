@@ -19,5 +19,7 @@
         <app-text-field formControlName="phonenumber" label="شماره تلفن" placeholder="مثلا:  09026756849"
             type="phonenumber" backgroundColor="#F1F3E0" [showValidationUI]="true" [unmetRules]="phoneUnmetRules()"
             [success]="phoneUnmetRules().length===0" [errorMessage]=""></app-text-field>
+
+            <app-verification-code [boxNumber]="4"></app-verification-code>
     </form>
 </div>
