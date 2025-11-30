@@ -1,8 +1,8 @@
 <div dir="rtl" class="mt-2 p-4 flex justify-center">
     <form [formGroup]="signUpForm" class="grid lg:grid-cols-1 gap-4 w-80">
         <app-text-field formControlName="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"
-            backgroundColor="#F1F3E0" type="username" [showValidationUI]="true"
-            [unmetUserNameRules]="usernameUnmetRules()"
+            backgroundColor="#F1F3E0" type="username" [showValidationUI]="true" [unmetRules]="usernameUnmetRules()"
+            [success]="usernameUnmetRules().length===0"
             [errorMessage]="signUpForm.get('username')?.touched && signUpForm.get('username')?.errors?.['required'] ? 'نام کاربری الزامی است' : ''">
         </app-text-field>
 
@@ -10,12 +10,12 @@
             helperText="رمز عبور باید حداقل 8 کاراکتر و شامل یک حرف بزرگ ، یک حرف کوچک ، یک عدد  و یک کاراکتر خاص (@ $ & ! # ? %)"
             backgroundColor="#F1F3E0" type="password" [showValidationUI]="true" [passwordScore]="passwordScore()"
             [passwordColor]="passwordColor()" [passwordPercentage]="passwordPercentage()"
-            [unmetPasswordRules]="passwordUnmetRules()"
+            [unmetRules]="passwordUnmetRules()" [success]="passwordUnmetRules().length===0"
             [errorMessage]="signUpForm.get('password')?.touched && signUpForm.get('password')?.errors?.['required'] ? 'رمز عبور الزامی است' : '' ">
         </app-text-field>
 
         <app-text-field formControlName="nationalcode" label="کد ملی" placeholder="مثلا: 0250121311" type="nationalcode"
-            backgroundColor="#F1F3E0" [showValidationUI]="true"
-            [unmetNationalCodeRules]="nationalUnmetRules()"></app-text-field>
+            backgroundColor="#F1F3E0" [showValidationUI]="true" [unmetRules]="nationalUnmetRules()"
+            [success]="nationalUnmetRules().length===0"></app-text-field>
     </form>
 </div>

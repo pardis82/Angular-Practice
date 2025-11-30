@@ -52,10 +52,9 @@ export class TextField implements ControlValueAccessor {
 
   //---UI validation helpers---
   showValidationUI = input<boolean>(true);
+  success = input<boolean>(false);
+  unmetRules = input<string[]>([]);
   passwordScore = input<number>(0);
-  unmetPasswordRules = input<string[]>([]);
-  unmetUserNameRules = input<string[]>([]);
-  unmetNationalCodeRules = input<string[]>([]);
   passwordColor = input<string>('');
   passwordPercentage = input<number>(0);
 
@@ -98,14 +97,7 @@ export class TextField implements ControlValueAccessor {
   borderClasses = computed(() => {
     if (this.errorMessage()) return 'border-red-400';
 
-    if (
-      this.showValidationUI() &&
-      ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'nationalcode' &&
-          this.unmetNationalCodeRules().length === 0 &&
-          this.hasValue()))
-    ) {
+    if (this.showValidationUI() && this.hasValue() && this.success()) {
       return 'border-green-400';
     }
 
@@ -124,14 +116,7 @@ export class TextField implements ControlValueAccessor {
 
     if (this.errorMessage()) {
       classes.push('text-red-500');
-    } else if (
-      this.showValidationUI() &&
-      ((this.type() === 'password' && this.unmetPasswordRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'username' && this.unmetUserNameRules().length === 0 && this.hasValue()) ||
-        (this.type() === 'nationalcode' &&
-          this.unmetNationalCodeRules().length === 0 &&
-          this.hasValue()))
-    ) {
+    } else if (this.showValidationUI() && this.hasValue() && this.success()) {
       classes.push('text-green-600');
     } else if (shouldFloat) {
       classes.push('text-purple-600');
@@ -189,14 +174,7 @@ export class TextField implements ControlValueAccessor {
   }
 
   getDisplayMessage(): {
-    type:
-      | 'error'
-      | 'password-strong'
-      | 'password-helper'
-      | 'username-helper'
-      | 'nationalcode-helper' // Add this
-      | 'general-helper'
-      | 'none';
+    type: 'error' | 'password-strong' | 'password-helper' | 'general-helper' | 'none';
     content: any;
   } {
     if (this.errorMessage()) {
@@ -204,36 +182,24 @@ export class TextField implements ControlValueAccessor {
     }
 
     if (this.showValidationUI() && this.type() === 'password' && this.hasValue()) {
-      if (this.unmetPasswordRules().length === 0) {
+      if (this.success()) {
         return { type: 'password-strong', content: null };
       } else {
         return {
           type: 'password-helper',
           content: {
             helperText: this.helperText(),
-            rules: this.unmetPasswordRules(),
+            rules: this.unmetRules(),
           },
         };
       }
     }
 
-    if (this.showValidationUI() && this.type() === 'username' && this.hasValue()) {
-      if (this.unmetUserNameRules().length > 0) {
-        return {
-          type: 'username-helper',
-          content: this.unmetUserNameRules()[0],
-        };
-      }
-    }
-
-    // ADD THIS SECTION FOR NATIONAL CODE
-    if (this.showValidationUI() && this.type() === 'nationalcode' && this.hasValue()) {
-      if (this.unmetNationalCodeRules().length > 0) {
-        return {
-          type: 'nationalcode-helper',
-          content: this.unmetNationalCodeRules()[0], // Show first error
-        };
-      }
+    if (this.showValidationUI() && this.hasValue() && !this.success()) {
+      return {
+        type: 'general-helper',
+        content: this.unmetRules()[0],
+      };
     }
 
     if (this.helperText() && this.hasValue()) {
