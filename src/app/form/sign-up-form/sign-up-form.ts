@@ -4,6 +4,7 @@ import { TextField } from '../../text-field/text-field';
 import { PassValidationService } from '../../../services/pass-validation/pass-validation';
 import { UserNameValidationService } from '../../../services/user-name-validation/user-name-validation';
 import { NationalCodeValidation } from '../../../services/nationalcode-validation/national-code-validation';
+import { PhoneNumberValidation } from '../../../services/phonenumber-validation/phone-number-validation';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -19,13 +20,15 @@ export class SignUpForm implements OnInit {
     username: '',
     password: '',
     nationalcode: '',
+    phonenumber: '',
   });
 
   constructor(
     private fb: FormBuilder,
     private passvalidation: PassValidationService,
     private usernvalidation: UserNameValidationService,
-    private nationalcodevalidation: NationalCodeValidation
+    private nationalcodevalidation: NationalCodeValidation,
+    private phonevalidation: PhoneNumberValidation
   ) {}
 
   ngOnInit() {
@@ -33,6 +36,7 @@ export class SignUpForm implements OnInit {
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
       nationalcode: ['', [Validators.required]],
+      phonenumber: ['', [Validators.required]],
     });
 
     // Listen to form value changes and update the signal
@@ -41,6 +45,7 @@ export class SignUpForm implements OnInit {
         username: values.username || '',
         password: values.password || '',
         nationalcode: values.nationalcode || '',
+        phonenumber: values.phonenumber || '',
       });
     });
   }
@@ -55,9 +60,10 @@ export class SignUpForm implements OnInit {
   );
 
   nationalCodeValidation = computed(() =>
-    this.nationalcodevalidation.validateNationalCode(
-      this.formValues().nationalcode
-    )
+    this.nationalcodevalidation.validateNationalCode(this.formValues().nationalcode)
+  );
+  phonenumberValidation = computed(() =>
+    this.phonevalidation.validatePhoneNumber(this.formValues().phonenumber)
   );
   passwordScore = computed(() => this.passwordValidation().extra.score);
   passwordColor = computed(() => this.passwordValidation().extra.color);
@@ -65,4 +71,5 @@ export class SignUpForm implements OnInit {
   passwordUnmetRules = computed(() => this.passwordValidation().helper);
   usernameUnmetRules = computed(() => this.usernameValidation().unmet);
   nationalUnmetRules = computed(() => this.nationalCodeValidation().unmet);
+  phoneUnmetRules = computed(() => this.phonenumberValidation().unmet);
 }

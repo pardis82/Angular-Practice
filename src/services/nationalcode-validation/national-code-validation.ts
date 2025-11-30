@@ -9,7 +9,7 @@ export interface InationalCodeRequirements {
   providedIn: 'root',
 })
 export class NationalCodeValidation {
-  validateNationalCode(code: string | number | null | undefined): InationalCodeRequirements {
+  validateNationalCode(code: string | number): InationalCodeRequirements {
     const unmet: string[] = [];
 
     // Defensive: ensure we have a string
@@ -25,19 +25,14 @@ export class NationalCodeValidation {
     // Remove non-ASCII digits (anything not 0-9)
     const cleanCode = input.replace(/[^0-9]/g, '');
 
-    // DEBUG: helpful log to see what's being validated (remove in production)
-    // console.log('validateNationalCode input:', code, '->', input, 'clean:', cleanCode);
-
     // length
     if (cleanCode.length !== 10) {
       unmet.push('کد ملی باید ۱۰ رقم باشد');
-      
     }
 
     // equal digits (0000000000, 1111111111, ...)
     if (/^(\d)\1{9}$/.test(cleanCode)) {
       unmet.push('کد ملی نامعتبر است');
-     
     }
 
     // checksum
