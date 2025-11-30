@@ -46,11 +46,11 @@ export class PassValidationService {
     return { requirements, unmet, score };
   }
 
-  getPassPrecentage(score: number): number {
+  PassPrecentage(score: number): number {
     return (score / 5) * 100;
   }
 
-  getStrengthColor(score: number): string {
+  StrengthColor(score: number): string {
     if (score <= 0) return 'bg-red-600';
     if (score === 1) return 'bg-red-400';
     if (score === 2) return 'bg-yellow-500';
@@ -65,9 +65,9 @@ export class PassValidationService {
         valid: false,
         helper: [''],
         extra: {
-          color: this.getStrengthColor(0),
+          color: this.StrengthColor(0),
           score: 0,
-          percentage: this.getPassPrecentage(0),
+          percentage: this.PassPrecentage(0),
         },
       };
     }
@@ -79,8 +79,8 @@ export class PassValidationService {
       helper: passwordAnalysis.unmet,
       extra: {
         score: passwordAnalysis.score,
-        color: this.getStrengthColor(passwordAnalysis.score),
-        percentage: this.getPassPrecentage(passwordAnalysis.score),
+        color: this.StrengthColor(passwordAnalysis.score),
+        percentage: this.PassPrecentage(passwordAnalysis.score),
       },
     };
   }
