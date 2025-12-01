@@ -20,6 +20,7 @@
             type="phonenumber" backgroundColor="#F1F3E0" [showValidationUI]="true" [unmetRules]="phoneUnmetRules()"
             [success]="phoneUnmetRules().length===0" [errorMessage]=""></app-text-field>
 
-            <app-verification-code [boxNumber]="4"></app-verification-code>
+        <app-verification-code [boxNumber]="5" [maxLength]="3"></app-verification-code>
+        <app-verification-code [boxNumber]="4" [maxLength]="1"></app-verification-code>
     </form>
 </div>

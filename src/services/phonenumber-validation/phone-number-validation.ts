@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DigitNormalizationService } from '../digitnormalization-service/digit-normalization-service';
 
 export interface Iphonenumbervalidation {
   isValid: boolean;
@@ -9,6 +10,7 @@ export interface Iphonenumbervalidation {
   providedIn: 'root',
 })
 export class PhoneNumberValidation {
+  constructor(private NormalizeDigits: DigitNormalizationService) {}
   validatePhoneNumber(phonenumber: string): Iphonenumbervalidation {
     const unmet: string[] = [];
 
@@ -16,9 +18,9 @@ export class PhoneNumberValidation {
       unmet.push('شماره تلفن الزامی است');
       return { isValid: false, unmet };
     }
-
+    const normalizedNumber = this.NormalizeDigits.extractDigits(phonenumber);
     // حذف فاصله، خط تیره و کاراکترهای غیرعددی
-    const cleaned = phonenumber.replace(/[\s\-()]/g, '');
+    const cleaned = normalizedNumber.replace(/[\s\-()]/g, '');
 
     if (cleaned.length !== 11) {
       unmet.push('شماره تلفن باید 11 رقم باشد');

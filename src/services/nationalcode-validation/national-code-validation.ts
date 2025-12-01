@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DigitNormalizationService } from '../digitnormalization-service/digit-normalization-service';
 
 export interface InationalCodeRequirements {
   isValid: boolean;
@@ -9,6 +10,7 @@ export interface InationalCodeRequirements {
   providedIn: 'root',
 })
 export class NationalCodeValidation {
+  constructor(private digitNormalizer: DigitNormalizationService) {}
   validateNationalCode(code: string | number): InationalCodeRequirements {
     const unmet: string[] = [];
 
@@ -20,7 +22,7 @@ export class NationalCodeValidation {
     let input = String(code).trim();
 
     // Convert Persian/Arabic digits to English first
-    input = this.convertToEnglishDigits(input);
+    input = this.digitNormalizer.extractDigits(input);
 
     // Remove non-ASCII digits (anything not 0-9)
     const cleanCode = input.replace(/[^0-9]/g, '');
@@ -55,40 +57,5 @@ export class NationalCodeValidation {
       isValid: unmet.length === 0,
       unmet,
     };
-  }
-
-  private convertToEnglishDigits(text: string): string {
-    if (!text) return '';
-
-    // mapping for Persian and Arabic-Indic digits
-    const map: Record<string, string> = {
-      '۰': '0',
-      '۱': '1',
-      '۲': '2',
-      '۳': '3',
-      '۴': '4',
-      '۵': '5',
-      '۶': '6',
-      '۷': '7',
-      '۸': '8',
-      '۹': '9',
-      '٠': '0',
-      '١': '1',
-      '٢': '2',
-      '٣': '3',
-      '٤': '4',
-      '٥': '5',
-      '٦': '6',
-      '٧': '7',
-      '٨': '8',
-      '٩': '9',
-    };
-
-    // Replace by iterating characters (safe and fast)
-    let out = '';
-    for (const ch of text) {
-      out += map[ch] ?? ch;
-    }
-    return out;
   }
 }
