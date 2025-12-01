@@ -23,6 +23,7 @@ export class LoginForm implements OnInit {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
+      rememberme: [false],
     });
 
     // Listen to form status changes
@@ -34,7 +35,6 @@ export class LoginForm implements OnInit {
     this.formValid.set(this.loginForm.valid);
   }
 
-  
   passwordValidation = computed(() =>
     this.passvalidation.validatePassword(this.loginForm?.get('password')?.value || '')
   );
@@ -55,9 +55,16 @@ export class LoginForm implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
+      this.handleRemeberme();
       console.log('login Successful', this.loginForm.value);
     } else {
       this.loginForm.markAllAsTouched();
+    }
+  }
+  handleRemeberme() {
+    const remembermeVal = this.loginForm?.get('rememberme')?.value;
+    if (remembermeVal) {
+      console.log('remeber me working');
     }
   }
 }
