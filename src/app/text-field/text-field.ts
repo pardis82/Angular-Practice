@@ -49,6 +49,7 @@ export class TextField implements ControlValueAccessor {
   placeholder = input<string>();
   id = input<string>();
   name = input<string>();
+  normalizedDigits = input<boolean>(false);
 
   //---UI validation helpers---
   showValidationUI = input<boolean>(true);

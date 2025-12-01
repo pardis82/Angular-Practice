@@ -42,30 +42,19 @@ export class DigitNormalizationService {
     if (!text) return '';
 
     const normalized = this.convertToEnglishDigits(text);
-    // حذف هر چیزی که عدد نیست
     return normalized.replace(/\D/g, '');
   }
 
   normalizeArabicPersianNumbers(text: string): string {
     if (!text) return '';
-
-    // استفاده از regex برای کارایی بهتر
     return text.replace(/[٠-٩۰-۹]/g, (char) => this.digitMap[char] || char);
   }
-
-  /**
-   * بررسی می‌کند آیا رشته فقط عدد است (با پشتیبانی فارسی/عربی)
-   */
   isNumeric(text: string): boolean {
     if (!text) return false;
 
     const digits = this.extractDigits(text);
     return digits.length === text.length && /^\d+$/.test(digits);
   }
-
-  /**
-   * بررسی می‌کند آیا کاراکتر داده‌شده عدد فارسی/عربی است
-   */
   isArabicOrPersianDigit(char: string): boolean {
     return char in this.digitMap;
   }
