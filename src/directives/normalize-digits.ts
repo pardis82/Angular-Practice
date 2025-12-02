@@ -49,7 +49,7 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
 
   // Normalize + update Angular form control
   private normalizeAndUpdate(value: string): void {
-    const normalized = this.digitService.normalizeArabicPersianNumbers(value);
+    const normalized = this.digitService.convertNonEnglishDigits(value);
 
     if (value !== normalized) {
       this.el.nativeElement.value = normalized;
@@ -66,7 +66,7 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
       return;
     }
 
-    const normalized = this.digitService.normalizeArabicPersianNumbers(String(value));
+    const normalized = this.digitService.convertNonEnglishDigits(String(value));
     this.el.nativeElement.value = normalized;
   }
 

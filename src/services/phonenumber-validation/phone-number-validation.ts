@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DigitNormalizationService } from '../digitnormalization-service/digit-normalization-service';
 
 export interface Iphonenumbervalidation {
   isValid: boolean;
@@ -18,13 +17,13 @@ export class PhoneNumberValidation {
       return { isValid: false, unmet };
     }
 
-    const cleaned = phonenumber.trim().replace(/[\s\-()]/g, ''); // remove spaces, dashes, parens
+    const cleaned = phonenumber.trim().replace(/[\s\-()]/g, ''); // حذف اسپیس و دش و پارانتز و جاگذاری آنها با هیچی
 
     if (cleaned.length !== 11) {
       unmet.push('شماره تلفن باید 11 رقم باشد');
     }
 
-    // Validate Iranian mobile number format
+    // باید شماره تلفن با 09 شروع بشه و به جز اون فقط 9 رقم دیگه داشته باشه
     if (!/^09\d{9}$/.test(cleaned)) {
       unmet.push('فرمت شماره موبایل معتبر نمی باشد (باید با 09 شروع شده و 11 رقمی باشد)');
     }

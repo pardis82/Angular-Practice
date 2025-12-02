@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { DigitNormalizationService } from '../digitnormalization-service/digit-normalization-service';
 
 export interface InationalCodeRequirements {
   isValid: boolean;
@@ -25,11 +24,14 @@ export class NationalCodeValidation {
       return { isValid: false, unmet };
     }
 
+    //برای جلوگیری از تکرار یک رقم ده بار
+
     if (/^(\d)\1{9}$/.test(cleanCode)) {
       unmet.push('کد ملی نامعتبر است');
       return { isValid: false, unmet };
     }
 
+    //رقم آخر کد ملی یک محاسبات خاصی داره
     const controlDigit = Number(cleanCode[9]);
     let sum = 0;
     for (let i = 0; i < 9; i++) {

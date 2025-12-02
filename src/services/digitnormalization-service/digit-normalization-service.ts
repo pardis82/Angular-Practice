@@ -29,33 +29,23 @@ export class DigitNormalizationService {
     '٩': '9',
   };
 
-  convertToEnglishDigits(text: string): string {
-    if (!text) return '';
-    let result = '';
-    for (const char of text) {
-      result += this.digitMap[char] || char;
-    }
-    return result;
-  }
-
-  extractDigits(text: string): string {
-    if (!text) return '';
-
-    const normalized = this.convertToEnglishDigits(text);
-    return normalized.replace(/\D/g, '');
-  }
-
-  normalizeArabicPersianNumbers(text: string): string {
+  //رنج اعداد عربی و فارسی رو میدیم دونه دونه روی اعداد وارد شده میریم و هر کدوم رو طبق مپ با معادلش جا به جا میکنیم
+  convertNonEnglishDigits(text: string): string {
     if (!text) return '';
     return text.replace(/[٠-٩۰-۹]/g, (char) => this.digitMap[char] || char);
   }
+  //اول تبدیل میکنه به کاراکتر های انگلیسی بعد همه ی غیر اعداد رو پاک میکنه
+  extractDigits(text: string): string {
+    if (!text) return '';
+
+    const normalized = this.convertNonEnglishDigits(text);
+    return normalized.replace(/\D/g, '');
+  }
+
   isNumeric(text: string): boolean {
     if (!text) return false;
 
     const digits = this.extractDigits(text);
     return digits.length === text.length && /^\d+$/.test(digits);
-  }
-  isArabicOrPersianDigit(char: string): boolean {
-    return char in this.digitMap;
   }
 }
