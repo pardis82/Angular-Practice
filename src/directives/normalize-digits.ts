@@ -15,53 +15,60 @@ import { DigitNormalizationService } from '../services/digitnormalization-servic
   ],
 })
 export class NormalizeDigitsDirective implements ControlValueAccessor {
-  @Input() appNormalizeDigits: boolean = true;
+ @Input('appNormalizeDigits') appNormalizedDigits = true;
 
   private digitService = inject(DigitNormalizationService);
   private onChange: (value: any) => void = () => {};
   private onTouched: () => void = () => {};
   private isDisabled = false;
 
-  constructor(private el: ElementRef) {}
+  constructor(private el: ElementRef<HTMLInputElement>) {}
 
+  // Triggered on typing, pasting, autofill, etc.
   @HostListener('input', ['$event'])
-  onInput(event: Event): void {
-    if (!this.appNormalizeDigits) return;
+  handleInput(event: Event): void {
+    if (!this.appNormalizedDigits) return;
 
-    const input = event.target as HTMLInputElement | HTMLTextAreaElement;
-    this.normalizeAndUpdate(input);
+    const input = event.target as HTMLInputElement | null;
+    if (!input) return;
+
+    this.normalizeAndUpdate(input.value);
   }
 
+  // Triggered when user leaves the field
   @HostListener('blur')
-  onBlur(): void {
-    if (!this.appNormalizeDigits) return;
+  handleBlur(): void {
     this.onTouched();
+    if (!this.appNormalizedDigits) return;
 
-    // نرمالایز روی blur هم
     const input = this.el.nativeElement;
-    this.normalizeAndUpdate(input);
+    const value = input.value;
+
+    // Normalize if needed
+    this.normalizeAndUpdate(value);
   }
 
-  private normalizeAndUpdate(input: HTMLInputElement | HTMLTextAreaElement): void {
-    const originalValue = input.value;
-    const normalized = this.digitService.normalizeArabicPersianNumbers(originalValue);
+  // Normalize + update Angular form control
+  private normalizeAndUpdate(value: string): void {
+    const normalized = this.digitService.normalizeArabicPersianNumbers(value);
 
-    if (originalValue !== normalized) {
-      input.value = normalized;
+    if (value !== normalized) {
+      this.el.nativeElement.value = normalized;
       this.onChange(normalized);
-      // برای کامپوننت‌های پدر
-      input.dispatchEvent(new Event('input', { bubbles: true }));
+    } else {
+      this.onChange(value);
     }
   }
 
   // ControlValueAccessor methods
   writeValue(value: any): void {
-    if (value !== undefined && value !== null) {
-      const normalized = this.digitService.normalizeArabicPersianNumbers(String(value));
-      this.el.nativeElement.value = normalized;
-    } else {
+    if (value === undefined || value === null) {
       this.el.nativeElement.value = '';
+      return;
     }
+
+    const normalized = this.digitService.normalizeArabicPersianNumbers(String(value));
+    this.el.nativeElement.value = normalized;
   }
 
   registerOnChange(fn: any): void {

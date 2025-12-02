@@ -10,7 +10,6 @@ export interface Iphonenumbervalidation {
   providedIn: 'root',
 })
 export class PhoneNumberValidation {
-  constructor(private NormalizeDigits: DigitNormalizationService) {}
   validatePhoneNumber(phonenumber: string): Iphonenumbervalidation {
     const unmet: string[] = [];
 
@@ -18,15 +17,14 @@ export class PhoneNumberValidation {
       unmet.push('شماره تلفن الزامی است');
       return { isValid: false, unmet };
     }
-    const normalizedNumber = this.NormalizeDigits.extractDigits(phonenumber);
-    // حذف فاصله، خط تیره و کاراکترهای غیرعددی
-    const cleaned = normalizedNumber.replace(/[\s\-()]/g, '');
+
+    const cleaned = phonenumber.trim().replace(/[\s\-()]/g, ''); // remove spaces, dashes, parens
 
     if (cleaned.length !== 11) {
       unmet.push('شماره تلفن باید 11 رقم باشد');
     }
 
-    // اعتبارسنجی شماره موبایل ایران
+    // Validate Iranian mobile number format
     if (!/^09\d{9}$/.test(cleaned)) {
       unmet.push('فرمت شماره موبایل معتبر نمی باشد (باید با 09 شروع شده و 11 رقمی باشد)');
     }

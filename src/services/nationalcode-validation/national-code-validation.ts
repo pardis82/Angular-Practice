@@ -10,40 +10,32 @@ export interface InationalCodeRequirements {
   providedIn: 'root',
 })
 export class NationalCodeValidation {
-  constructor(private digitNormalizer: DigitNormalizationService) {}
   validateNationalCode(code: string | number): InationalCodeRequirements {
     const unmet: string[] = [];
 
-    // Defensive: ensure we have a string
     if (code === null || code === undefined) {
       unmet.push('کد ملی الزامی است');
       return { isValid: false, unmet };
     }
-    let input = String(code).trim();
 
-    // Convert Persian/Arabic digits to English first
-    input = this.digitNormalizer.extractDigits(input);
+    const cleanCode = String(code).trim();
 
-    // Remove non-ASCII digits (anything not 0-9)
-    const cleanCode = input.replace(/[^0-9]/g, '');
-
-    // length
-    if (cleanCode.length !== 10) {
+    if (!/^\d{10}$/.test(cleanCode)) {
       unmet.push('کد ملی باید ۱۰ رقم باشد');
+      return { isValid: false, unmet };
     }
 
-    // equal digits (0000000000, 1111111111, ...)
     if (/^(\d)\1{9}$/.test(cleanCode)) {
       unmet.push('کد ملی نامعتبر است');
+      return { isValid: false, unmet };
     }
 
-    // checksum
-    const controlDigit = Number(cleanCode.charAt(9));
+    const controlDigit = Number(cleanCode[9]);
     let sum = 0;
     for (let i = 0; i < 9; i++) {
-      const d = Number(cleanCode.charAt(i));
-      sum += d * (10 - i);
+      sum += Number(cleanCode[i]) * (10 - i);
     }
+
     const remainder = sum % 11;
     const isValidChecksum =
       (remainder < 2 && controlDigit === remainder) ||

@@ -10,12 +10,13 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { NormalizeDigitsDirective } from '../../directives/normalize-digits';
 
 @Component({
   selector: 'app-text-field',
   standalone: true,
   templateUrl: './text-field.html',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NormalizeDigitsDirective],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -49,7 +50,6 @@ export class TextField implements ControlValueAccessor {
   placeholder = input<string>();
   id = input<string>();
   name = input<string>();
-  normalizedDigits = input<boolean>(false);
 
   //---UI validation helpers---
   showValidationUI = input<boolean>(true);
