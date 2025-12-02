@@ -41,11 +41,4 @@ export class DigitNormalizationService {
     const normalized = this.convertNonEnglishDigits(text);
     return normalized.replace(/\D/g, '');
   }
-
-  isNumeric(text: string): boolean {
-    if (!text) return false;
-
-    const digits = this.extractDigits(text);
-    return digits.length === text.length && /^\d+$/.test(digits);
-  }
 }
