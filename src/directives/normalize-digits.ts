@@ -5,6 +5,7 @@ import { DigitNormalizationService } from '../services/digitnormalization-servic
 @Directive({
   selector: '[appNormalizeDigits]',
   standalone: true,
+  //میایم اون سرویس که برای تبدیل کاراکتر های عربی و فارسی نوشتیم رو اینجا به عنوان value accessor میدیم تا بر روی همه ی فرم ها به عنوان یک فرم کنترل اعمال بشه
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -14,6 +15,7 @@ import { DigitNormalizationService } from '../services/digitnormalization-servic
   ],
 })
 export class NormalizeDigitsDirective implements ControlValueAccessor {
+  //اینجا میایم به عنوان اینپوت تعریف میکنیم این دایرکتیو رو تا از بیرون بتونیم بهش مقدار بدیم مثلا اگه روی یه اینپوتی خواستیم مثلا اعمال نکنیم
   @Input('appNormalizeDigits') appNormalizedDigits = true;
 
   private digitService = inject(DigitNormalizationService);
@@ -23,7 +25,8 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
 
   constructor(private el: ElementRef<HTMLInputElement>) {}
 
-  // Triggered on typing, pasting, autofill, etc.
+  // ما hostlistener رو اضافه میکنیم تا به یک اتفاق خاصی در کامپوننت پدری که دایرکتیو اونجا استفاده میشه گوش کنیم
+  //اینجا دونه دونه مواردی که کاربر وارد میکنه رو بررسی میکنه
   @HostListener('input', ['$event'])
   handleInput(event: Event): void {
     if (!this.appNormalizedDigits) return;
@@ -33,7 +36,7 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
 
     this.normalizeAndUpdate(input.value);
   }
-
+  //اینجا دوباره وقتی کاربر از فوکس درمیاد اینپوتش بازم چک میکنه
   // Triggered when user leaves the field
   @HostListener('blur')
   handleBlur(): void {
@@ -53,6 +56,7 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
 
     if (value !== normalized) {
       this.el.nativeElement.value = normalized;
+      //اینجا مطمئن میشه فرم ها میفهمن که مقدار جدید شده
       this.onChange(normalized);
     } else {
       this.onChange(value);
@@ -70,14 +74,16 @@ export class NormalizeDigitsDirective implements ControlValueAccessor {
     this.el.nativeElement.value = normalized;
   }
 
+  //به فرم اطلاع میده اطلاعا تغییر کرده
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
-
+  //به فرم اطلاع میده به اینپوت دست بردیم و تغییراتی اعمل کردیم
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
+  //اگر فرم اینپوتی رو غیرفعال کنه میتونیم اینجا ازش استفاده کنیم
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
     this.el.nativeElement.disabled = isDisabled;
