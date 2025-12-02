@@ -1,4 +1,3 @@
-// normalize-digits.directive.ts
 import { Directive, ElementRef, HostListener, Input, forwardRef, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { DigitNormalizationService } from '../services/digitnormalization-service/digit-normalization-service';
@@ -15,7 +14,7 @@ import { DigitNormalizationService } from '../services/digitnormalization-servic
   ],
 })
 export class NormalizeDigitsDirective implements ControlValueAccessor {
- @Input('appNormalizeDigits') appNormalizedDigits = true;
+  @Input('appNormalizeDigits') appNormalizedDigits = true;
 
   private digitService = inject(DigitNormalizationService);
   private onChange: (value: any) => void = () => {};
