@@ -37,15 +37,24 @@ export class VerificationCode {
   boxedFilled = output<string>(); //when all boxes are filled we notify the parent
   boxPerChange = output<string>(); // when each box is filled
   maxLength = input<number>(1);
+  boxMaxLength = input<number[]>([]);
   verificationValues = signal<FormControl[]>([]);
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffffffff');
 
+  getMaxLengthPerBox(index: number): number {
+    const perBox = this.boxMaxLength();
+    if (Array.isArray(perBox) && perBox.length === this.boxNumber()) {
+      return perBox[index];
+    }
+    return this.maxLength();
+  }
+
   onInput(event: any, index: any) {
     const target = event.target;
     const value = target.value;
-    const maxChars = this.maxLength();
+    const maxChars = this.getMaxLengthPerBox(index);
 
     if (value && value.length > 0) this.boxPerChange.emit(value);
     if (value.length === maxChars && index < this.boxNumber() - 1) {
@@ -75,12 +84,37 @@ export class VerificationCode {
       }
     }
   }
+  onArrowKeys(event:KeyboardEvent , index:number){
+    if(event.key=='ArrowLeft') {
+      if(index>=0){
+        event.preventDefault();
+        setTimeout(()=> {
+          const inputs = this.codeInputs.toArray()
+          if(inputs[index-1]) {
+inputs[index-1].nativeElement.focus()
+          }
+        })
+      }
+    }
+
+    if(event.key==='ArrowRight'){
+      if(index<this.boxNumber()-1){
+        event.preventDefault();
+        setTimeout(()=>{
+          const inputs = this.codeInputs.toArray()
+          if(inputs[index+1]){
+            inputs[index+1].nativeElement.focus()
+          }
+        })
+      }
+    }
+  }
 
   onPaste(event: ClipboardEvent, index: number) {
     event.preventDefault();
 
     const pastedText = event.clipboardData?.getData('text') || '';
-    const maxLen = this.maxLength();
+    const maxLen = this.getMaxLengthPerBox(index);
     const totalBoxes = this.boxNumber();
     const controls = this.verificationValues();
 
@@ -89,6 +123,7 @@ export class VerificationCode {
 
     // از ایندکس فعلی شروع کن و باکس‌ها رو پر کن
     while (currentIndex < totalBoxes && charIndex < pastedText.length) {
+      const maxLen = this.getMaxLengthPerBox(currentIndex);
       const currentControl = controls[currentIndex];
       const currentValue = currentControl.value || '';
 
