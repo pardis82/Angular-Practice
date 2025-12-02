@@ -8,6 +8,7 @@ import {
   ViewChildren,
   ElementRef,
   QueryList,
+  OnInit,
 } from '@angular/core';
 import {
   FormBuilder,
@@ -15,6 +16,7 @@ import {
   FormControl,
   ɵInternalFormsSharedModule,
 } from '@angular/forms';
+import { FakeCode } from '../fakeverificationcode';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -22,7 +24,7 @@ import { CommonModule } from '@angular/common';
   imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, CommonModule],
   templateUrl: './verification-code.html',
 })
-export class VerificationCode {
+export class VerificationCode  {
   constructor(private fb: FormBuilder) {
     effect(() => {
       const count = this.boxNumber();
@@ -32,6 +34,8 @@ export class VerificationCode {
       this.verificationValues.set(newControls);
     });
   }
+
+ 
   @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef<HTMLInputElement>>;
   boxNumber = input<number>(6); //how many inputs do we have based on where we want to use it
   boxedFilled = output<string>(); //when all boxes are filled we notify the parent
@@ -83,29 +87,27 @@ export class VerificationCode {
         });
       }
     }
-  }
-  onArrowKeys(event:KeyboardEvent , index:number){
-    if(event.key=='ArrowLeft') {
-      if(index>=0){
+    if (event.key == 'ArrowLeft') {
+      if (index >= 0) {
         event.preventDefault();
-        setTimeout(()=> {
-          const inputs = this.codeInputs.toArray()
-          if(inputs[index-1]) {
-inputs[index-1].nativeElement.focus()
+        setTimeout(() => {
+          const inputs = this.codeInputs.toArray();
+          if (inputs[index - 1]) {
+            inputs[index - 1].nativeElement.focus();
           }
-        })
+        });
       }
     }
 
-    if(event.key==='ArrowRight'){
-      if(index<this.boxNumber()-1){
+    if (event.key === 'ArrowRight') {
+      if (index < this.boxNumber() - 1) {
         event.preventDefault();
-        setTimeout(()=>{
-          const inputs = this.codeInputs.toArray()
-          if(inputs[index+1]){
-            inputs[index+1].nativeElement.focus()
+        setTimeout(() => {
+          const inputs = this.codeInputs.toArray();
+          if (inputs[index + 1]) {
+            inputs[index + 1].nativeElement.focus();
           }
-        })
+        });
       }
     }
   }
@@ -143,7 +145,6 @@ inputs[index-1].nativeElement.focus()
         currentIndex++;
       }
     }
-
     // فوکس و cursor رو تنظیم کن
     setTimeout(() => {
       const inputs = this.codeInputs.toArray();
@@ -160,4 +161,6 @@ inputs[index-1].nativeElement.focus()
       }
     });
   }
+
+  
 }

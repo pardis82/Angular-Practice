@@ -1,9 +1,9 @@
 <div dir="ltr" class="grid gap-2 sm:grid-cols-5 " [ngClass]="containerClassName()">
     @for (control of verificationValues(); track control ; let i = $index) {
     <input class="border border-gray-300 rounded-md focus:border-blue-300 focus:ring-1 focus:ring-blue-400 focus:outline-none
-             transition-all transition-colors duration-40 text-center text-sm" [ngClass]="className()"
+             transition-all transition-colors duration-40 text-center text-sm" [ngClass]="className() "
         [style.background-color]="backgroundColor()" #codeInput [formControl]="control" type="text"
         [attr.maxlength]="getMaxLengthPerBox(i)" (input)="onInput($event , i)" (keydown)="onKeyDown($event , i)"
-        (paste)="onPaste($event , i)" (keydown)="onArrowKeys($event,i)">
+        (paste)="onPaste($event , i)">
     }
 </div>
