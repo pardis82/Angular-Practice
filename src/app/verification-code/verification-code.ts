@@ -47,6 +47,7 @@ export class VerificationCode  {
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffffffff');
+  verificationCode= '12345'
 
   getMaxLengthPerBox(index: number): number {
     const perBox = this.boxMaxLength();
@@ -162,6 +163,18 @@ export class VerificationCode  {
       }
     });
   }
+
+  isBoxCorrect(index: number): boolean {
+  const controls = this.verificationValues();
+  if (!controls[index]) return false;
+
+  const value = controls[index].value || '';
+  const expected = this.verificationCode[index] || '';
+
+  return value === expected && value.length === 1;
+
+  
+}
 
   
 }

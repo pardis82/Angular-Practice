@@ -19,7 +19,7 @@
         <app-text-field formControlName="phonenumber" label="شماره تلفن" placeholder="مثلا:  09026756849"
             type="phonenumber" backgroundColor="#F1F3E0" [showValidationUI]="true" [unmetRules]="phoneUnmetRules()"
             [success]="phoneUnmetRules().length===0" [errorMessage]=""></app-text-field>
-
+ <app-verification-code [boxNumber]="5" [maxLength]="1"></app-verification-code>
         <app-verification-code [boxNumber]="5" [maxLength]="3"></app-verification-code>
         <app-verification-code [boxNumber]="4" [maxLength]="1"></app-verification-code>
         <app-verification-code [boxNumber]="4" [boxMaxLength]="[3,2,1,1]"></app-verification-code>
