@@ -16,17 +16,18 @@ import {
   FormControl,
   ɵInternalFormsSharedModule,
 } from '@angular/forms';
-import { FakeCode } from '../fakeverificationcode';
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-verification-code',
   imports: [ɵInternalFormsSharedModule, ReactiveFormsModule, CommonModule],
   templateUrl: './verification-code.html',
 })
-export class VerificationCode  {
+export class VerificationCode {
   constructor(private fb: FormBuilder) {
+    //افکت ها هر وقت dependecy هاشون تغییر کنه تغییر میکنن
+
+    //تعداد باکس هارو میگیریم به آرایه خالی تبدیل میکنیم هر کدام از خانه های خالی رو به یک form control تبدیل میکنیم با مقدار خالی و بعد مقادیر verfication values رو به اون form control ها تغییر میدیم
     effect(() => {
       const count = this.boxNumber();
       const newControls = Array(count)
@@ -36,7 +37,8 @@ export class VerificationCode  {
     });
   }
 
- 
+  //برای اینه که بتونیم این کد اینپوت رو تحت نظر داشته باشیم
+  //به همه ی اینپوت هایی که با #codeInput علامت گذاری شدن دسترسی پیدا میکنیم
   @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef<HTMLInputElement>>;
   boxNumber = input<number>(6); //how many inputs do we have based on where we want to use it
   boxedFilled = output<string>(); //when all boxes are filled we notify the parent
@@ -47,8 +49,9 @@ export class VerificationCode  {
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffffffff');
-  verificationCode= '12345'
+  verificationCode = '12345';
 
+  //اول میایم آرایه boxMaxLength رو میدیم به perbox بعد بررسی میکنیم که آیا آرایه هست یا نه بعد اگر طول ارایه برابر با تعداد باکس ها باشه میاد برای هر ایندکس آرایه ای از تعدادی که داریم میاره
   getMaxLengthPerBox(index: number): number {
     const perBox = this.boxMaxLength();
     if (Array.isArray(perBox) && perBox.length === this.boxNumber()) {
@@ -57,11 +60,10 @@ export class VerificationCode  {
     return this.maxLength();
   }
 
+  //برای هندل کردن بردن فوکس به باکس بعدی در صورت پر شدن اون باکس به مقداری که مکس اعدادی بوده که قبول میکرده
   onInput(event: any, index: any) {
-    const target = event.target;
-    const value = target.value;
+    const value = event.target.value;
     const maxChars = this.getMaxLengthPerBox(index);
-
     if (value && value.length > 0) this.boxPerChange.emit(value);
     if (value.length === maxChars && index < this.boxNumber() - 1) {
       setTimeout(() => {
@@ -72,10 +74,11 @@ export class VerificationCode  {
       });
     }
   }
+
+  //هندل کردن فشار دادن کلید های backspace و arrow راست و چپ
   onKeyDown(event: KeyboardEvent, index: number) {
     const target = event.target as HTMLInputElement;
     const currentValue = target.value;
-    const cursorPosition = target.selectionStart || 0;
     if (event.key == 'Backspace') {
       if (currentValue === '' && index >= 0) {
         event.preventDefault();
@@ -118,7 +121,6 @@ export class VerificationCode  {
     event.preventDefault();
 
     const pastedText = event.clipboardData?.getData('text') || '';
-    const maxLen = this.getMaxLengthPerBox(index);
     const totalBoxes = this.boxNumber();
     const controls = this.verificationValues();
 
@@ -165,16 +167,12 @@ export class VerificationCode  {
   }
 
   isBoxCorrect(index: number): boolean {
-  const controls = this.verificationValues();
-  if (!controls[index]) return false;
+    const controls = this.verificationValues();
+    if (!controls[index]) return false;
 
-  const value = controls[index].value || '';
-  const expected = this.verificationCode[index] || '';
+    const value = controls[index].value || '';
+    const expected = this.verificationCode[index] || '';
 
-  return value === expected && value.length === 1;
-
-  
-}
-
-  
+    return value === expected && value.length === 1;
+  }
 }
