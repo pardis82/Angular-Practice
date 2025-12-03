@@ -1,5 +1,5 @@
 <div dir="rtl" class="mt-2 p-4 flex justify-center">
-    <form [formGroup]="signUpForm" class="grid lg:grid-cols-1 gap-4 w-80">
+    <form [formGroup]="userProfileForm" class="grid lg:grid-cols-1 gap-4 w-80">
         <app-text-field formControlName="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"
             backgroundColor="#F1F3E0" type="username" [showValidationUI]="true" [unmetRules]="usernameUnmetRules()"
             [success]="usernameUnmetRules().length===0">

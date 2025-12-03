@@ -6,10 +6,11 @@ import { UserNameValidationService } from '../../../services/user-name-validatio
 import { NationalCodeValidation } from '../../../services/nationalcode-validation/national-code-validation';
 import { PhoneNumberValidation } from '../../../services/phonenumber-validation/phone-number-validation';
 import { VerificationCode } from '../../verification-code/verification-code';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up-form',
-  imports: [TextField, ReactiveFormsModule, VerificationCode],
+  imports: [TextField, ReactiveFormsModule, VerificationCode , RouterLink],
   templateUrl: './sign-up-form.html',
 })
 export class SignUpForm implements OnInit {

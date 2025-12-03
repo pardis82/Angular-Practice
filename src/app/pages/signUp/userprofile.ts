@@ -11,8 +11,8 @@ import { PhoneNumberValidation } from '../../../services/phonenumber-validation/
   imports: [TextField, ReactiveFormsModule],
   templateUrl: './userprofile.html',
 })
-export class SignUpForm implements OnInit {
-  signUpForm!: FormGroup;
+export class userProfile implements OnInit {
+  userProfileForm!: FormGroup;
   formValid = signal(false);
 
   // Create signals for form values to trigger computed updates
@@ -32,7 +32,7 @@ export class SignUpForm implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.signUpForm = this.fb.group({
+    this.userProfileForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
       nationalcode: ['', [Validators.required]],
@@ -40,7 +40,7 @@ export class SignUpForm implements OnInit {
     });
 
     // Listen to form value changes and update the signal
-    this.signUpForm.valueChanges.subscribe((values) => {
+    this.userProfileForm.valueChanges.subscribe((values) => {
       this.formValues.set({
         username: values.username || '',
         password: values.password || '',

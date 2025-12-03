@@ -3,6 +3,8 @@ import { Home } from './home/home';
 import { Details } from './details/details';
 import { LoginForm } from './form/login-form/login-form';
 import { SignUpForm } from './form/sign-up-form/sign-up-form';
+import { CodePage } from './pages/signUp/code';
+import { userProfile } from './pages/signUp/userprofile';
 
 const routes: Routes = [
   {
@@ -26,7 +28,15 @@ const routes: Routes = [
     component: SignUpForm,
     title: 'Sign Up practice'
   },
+  {path:'codeVerification',
+    component:CodePage,
+    title: 'code verification page'
+  },
 
+{path:'userProfile', 
+  component: userProfile,
+  title:'user profile page'
+}
  
 ];
 export default routes;

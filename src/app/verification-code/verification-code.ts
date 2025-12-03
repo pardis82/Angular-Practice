@@ -49,7 +49,8 @@ export class VerificationCode {
   containerClassName = input<string>();
   className = input<string>();
   backgroundColor = input<string>(' #ffffffff');
-  verificationCode = '12345';
+  verificationCode = input<string>('');
+  verificationComplete = output<{ success: boolean; code: string }>();
 
   //اول میایم آرایه boxMaxLength رو میدیم به perbox بعد بررسی میکنیم که آیا آرایه هست یا نه بعد اگر طول ارایه برابر با تعداد باکس ها باشه میاد برای هر ایندکس آرایه ای از تعدادی که داریم میاره
   getMaxLengthPerBox(index: number): number {
@@ -73,6 +74,7 @@ export class VerificationCode {
         }
       });
     }
+    this.checkAllBoxesCorrect();
   }
 
   //هندل کردن فشار دادن کلید های backspace و arrow راست و چپ
@@ -149,6 +151,9 @@ export class VerificationCode {
         currentIndex++;
       }
     }
+    setTimeout(() => {
+      this.checkAllBoxesCorrect();
+    });
     // فوکس و cursor رو تنظیم کن
     setTimeout(() => {
       const inputs = this.codeInputs.toArray();
@@ -171,8 +176,20 @@ export class VerificationCode {
     if (!controls[index]) return false;
 
     const value = controls[index].value || '';
-    const expected = this.verificationCode[index] || '';
+    const expected = this.verificationCode()[index] || '';
 
     return value === expected && value.length === 1;
+  }
+  checkAllBoxesCorrect(): void {
+    const controls = this.verificationValues();
+    const areAllFilled = controls.every((control) => control.value && control.value.length > 0);
+    if (areAllFilled) {
+      const fullCode = controls.map((control) => control.value).join('');
+      const success = fullCode === this.verificationCode();
+      this.verificationComplete.emit({
+        success: success,
+        code: fullCode,
+      });
+    }
   }
 }
