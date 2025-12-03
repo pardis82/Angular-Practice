@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
     <div dir="ltr" class="flex justify-center">
       <app-verification-code
         [boxNumber]="5"
-        [maxLength]="1"
-        [verificationCode]="'45678'"
+        [maxLength]="3"
+        [verificationCode]="'123456789101112'"
         (verificationComplete)="handleVerification($event)"
       ></app-verification-code>
     </div>

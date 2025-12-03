@@ -41,7 +41,7 @@ export class VerificationCode {
   //به همه ی اینپوت هایی که با #codeInput علامت گذاری شدن دسترسی پیدا میکنیم
   @ViewChildren('codeInput') codeInputs!: QueryList<ElementRef<HTMLInputElement>>;
   boxNumber = input<number>(6); //how many inputs do we have based on where we want to use it
-  boxedFilled = output<string>(); //when all boxes are filled we notify the parent
+  boxFilled = output<string>(); //when all boxes are filled we notify the parent
   boxPerChange = output<string>(); // when each box is filled
   maxLength = input<number>(1);
   boxMaxLength = input<number[]>([]);
@@ -176,13 +176,22 @@ export class VerificationCode {
     if (!controls[index]) return false;
 
     const value = controls[index].value || '';
-    const expected = this.verificationCode()[index] || '';
+    const maxLen = this.getMaxLengthPerBox(index);
+    const expected = this.verificationCode() || '';
+    let startIndex = 0;
+    for (let i = 0; i < index; i++) {
+      startIndex += this.getMaxLengthPerBox(i);
+    }
+    const expectedSegment = expected.substring(startIndex, startIndex + maxLen);
 
-    return value === expected && value.length === 1;
+    return value === expectedSegment && value.length === maxLen;
   }
   checkAllBoxesCorrect(): void {
     const controls = this.verificationValues();
-    const areAllFilled = controls.every((control) => control.value && control.value.length > 0);
+    const areAllFilled = controls.every((control, index) => {
+      const maxLen = this.getMaxLengthPerBox(index);
+      return control.value && control.value.length === maxLen;
+    });
     if (areAllFilled) {
       const fullCode = controls.map((control) => control.value).join('');
       const success = fullCode === this.verificationCode();
@@ -190,6 +199,9 @@ export class VerificationCode {
         success: success,
         code: fullCode,
       });
+      if (success) {
+        this.boxFilled.emit(fullCode);
+      }
     }
   }
 }

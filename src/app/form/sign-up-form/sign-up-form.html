@@ -1,4 +1,4 @@
-<a [routerLink]="'/codeVerification'">code verification page</a>
+<a class="text-blue-600 m-5" [routerLink]="'/codeVerification'">code verification page</a>
 <div dir="rtl" class="mt-2 p-4 flex justify-center">
     <form [formGroup]="signUpForm" class="grid lg:grid-cols-1 gap-4 w-80">
         <app-text-field formControlName="username" label="نام کاربری" placeholder="نام کاربری خود را وارد کنید"
@@ -21,8 +21,10 @@
             type="phonenumber" backgroundColor="#F1F3E0" [showValidationUI]="true" [unmetRules]="phoneUnmetRules()"
             [success]="phoneUnmetRules().length===0" [errorMessage]=""></app-text-field>
         <app-verification-code [boxNumber]="5" [maxLength]="1" [verificationCode]="'56789'"></app-verification-code>
-        <app-verification-code [boxNumber]="5" [maxLength]="3"></app-verification-code>
+        <app-verification-code [boxNumber]="5" [maxLength]="3"
+            [verificationCode]="'123456789101112'"></app-verification-code>
         <app-verification-code [boxNumber]="4" [maxLength]="1" [verificationCode]="'6789'"></app-verification-code>
-        <app-verification-code [boxNumber]="4" [boxMaxLength]="[3,2,1,1]"></app-verification-code>
+        <app-verification-code [boxNumber]="4" [boxMaxLength]="[3,2,1,1]"
+            [verificationCode]="'0217771'"></app-verification-code>
     </form>
 </div>
